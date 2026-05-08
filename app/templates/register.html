@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Responsive adjustment for a website -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Register</title>
+        <link rel="stylesheet" href = "registerstyle.css">
+    </head>
+    <body>
+        <div class="content">
+            <div class="introduction">
+            <h1>Create your account</h1>
+            <h4>Start your learning with us</h4>
+            </div>
+            <!-- User form to routing a register URL to receive response from server -->
+            <form action="register.html" method="post">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+
+                <div class="terms-group">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">I agree to the
+                    <a href="terms.html" class="text-purple-600 font-medium">Terms and Conditions</a></label>
+                </div>
+
+                <button type="submit" class="submit-btn">Create Account</button>
+
+                <p class="sign-in-page"> Already have an account? </p> <a href="login.html">Sign In</a>
+            </div>
+            </form>
+        </div>
+    </body>
+</html>

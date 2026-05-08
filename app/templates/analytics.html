@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Analytics Page</title>
+    <!-- Objective path to the root folder -->
+    <link rel="stylesheet" href="/analytics.css">
+</head>
+<body>
+
+    <div class="analytics-wrapper">
+        <header class="hero-banner">
+            <h1>Analytics</h1>
+            <p>Your weekly flashcard study process</p>
+        </header>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <!-- Flask will fill these when running -->
+                <div class="stat-value">{{ cards }}</div>
+                <div class="stat-label">Cards studied</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ acc }}%</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ streak }}</div>
+                <div class="stat-label">Days Streak</div>
+            </div>
+        </section>
+
+        <section class="chart-container">
+            <h3>This Week</h3>
+            <div class="bar-chart-area">
+                <!-- This is the logic that causes the IDE error -->
+                <!-- We wrap the style value carefully to help the IDE -->
+                {% for val in chart_data %}
+                <div class="bar-wrapper"> 
+                    <div class="bar" style="height: {{ val }}%;"></div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="chart-labels">
+                <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+            </div>
+        </section>
+    </div>
+
+</body>
+</html> 

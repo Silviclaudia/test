@@ -1,0 +1,80 @@
+:root {
+    --primary-purple: #6c5ce7;
+    --light-purple: #f3f0ff;
+    --text-main: #2f3640;
+    --bg-main: #f5f6fa;
+}
+
+* {
+    margin:0;
+    padding:0;
+    box-sizing: border-box; /*reduce break in display*/
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.introduction {
+    text-align: center;
+}
+.content {
+    padding: 35px;
+}
+
+label {
+    display: block; /*each elements start in new line*/
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+input {
+    width: 100%;
+    background: white;
+    border-radius: 5px;
+    padding:6px;
+    border: 2px solid var(--primary-purple);
+}
+
+.terms-group {
+    margin-top: 20px;
+}
+
+.terms-group input[type="checkbox"]{
+    width: 17px;
+    height: 17px;
+    accent-color: #6c5ce7;
+    cursor: pointer;
+    flex-shrink: 0; /*no shrinking at all*/
+}
+
+.terms-group label{
+    display: inline;  
+    padding: 10px;
+}
+
+.submit-btn {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background: #f3f0ff;
+    border-radius: 5px;
+    padding:6px;
+    cursor: pointer;
+    border: 2px solid var(--primary-purple);
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(108, 92, 231, 0.15);
+    background-color: var(--light-purple);
+}
+
+.sign-in-page {
+    display: inline;
+}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Study App{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div>
+        <h1>Good to see you.</h1>
+        <p>Create a set, or jump into studying.</p>
+        <p>Flashcards that actually help you remember.</p>
+    </div>
+    <div class="hero-sketch" aria-hidden="true">
+        <i class="fa-regular fa-star"></i>
+    </div>
+</section>
+
+<section class="study-modes" aria-labelledby="study-mode-heading">
+    <h2 id="study-mode-heading">Study modes</h2>
+    <div class="mode-list">
+        <article class="feature-card">
+            <span class="icon-bubble">
+                <i class="fa-regular fa-copy"></i>
+            </span>
+            <div>
+                <h3>Flip Mode</h3>
+                <p>Go through your cards one by one.</p>
+            </div>
+        </article>
+        <article class="feature-card">
+            <span class="icon-bubble">
+                <i class="fa-regular fa-circle-question"></i>
+            </span>
+            <div>
+                <h3>Quiz Mode</h3>
+                <p>Test what you know (or don't).</p>
+            </div>
+        </article>
+        <article class="feature-card">
+            <span class="icon-bubble">
+                <i class="fa-regular fa-clock"></i>
+            </span>
+            <div>
+                <h3>Time Game</h3>
+                <p>Answer as many as you can.</p>
+            </div>
+        </article>
+    </div>
+</section>
+
+<section class="recent-sets" aria-labelledby="recent-set-heading">
+    <div class="section-heading">
+        <h2 id="recent-set-heading">Recent public study sets</h2>
+        <a href="#">View all <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="set-list">
+        <article class="set-row">
+            <i class="fa-regular fa-bookmark"></i>
+            <h3>Spanish Vocabulary - Unit 3</h3>
+            <p>128 cards</p>
+            <p>by maria_12</p>
+            <p>2.1k <i class="fa-regular fa-eye"></i></p>
+        </article>
+        <article class="set-row">
+            <i class="fa-regular fa-bookmark"></i>
+            <h3>Math Basics</h3>
+            <p>64 cards</p>
+            <p>by studybuddy</p>
+            <p>1.4k <i class="fa-regular fa-eye"></i></p>
+        </article>
+        <article class="set-row">
+            <i class="fa-regular fa-bookmark"></i>
+            <h3>Chemistry Elements</h3>
+            <p>118 cards</p>
+            <p>by chem_ninja</p>
+            <p>980 <i class="fa-regular fa-eye"></i></p>
+        </article>
+    </div>
+</section>
+{% endblock %}

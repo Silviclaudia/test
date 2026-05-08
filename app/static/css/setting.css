@@ -4,18 +4,27 @@
   box-sizing: border-box;
 }
 
+:root {
+  --primary-purple: #6c5ce7;
+  --light-purple: #f3f0ff;
+  --text-main: #2f3640;
+  --text-muted: #64748b;
+  --border-color: #dcdde1;
+  --background: #f5f6fa;
+}
+
 body {
   min-height: 100vh;
   font-family: Arial, sans-serif;
-  background-color: #f1f5f9;
-  color: #1e293b;
+  background-color: var(--background);
+  color: var(--text-main);
 }
 
 .top-bar {
   width: 100%;
   height: 82px;
   background-color: white;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   padding: 0 40px;
@@ -32,18 +41,18 @@ body {
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border-color);
 }
 
 .user-profile h1 {
   font-size: 20px;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-main);
 }
 
 .user-profile p {
   font-size: 13px;
-  color: #64748b;
+  color: var(--text-muted);
   margin-top: 2px;
 }
 
@@ -55,7 +64,7 @@ body {
 .side-bar {
   width: 260px;
   background-color: white;
-  border-right: 1px solid #e2e8f0;
+  border-right: 1px solid var(--border-color);
   padding: 28px 18px;
   display: flex;
   flex-direction: column;
@@ -69,19 +78,19 @@ body {
   padding: 13px 16px;
   border-radius: 12px;
   text-decoration: none;
-  color: #475569;
+  color: var(--text-main);
   font-size: 15px;
   font-weight: 600;
   transition: 0.2s;
 }
 
 .side-bar a:hover {
-  background-color: #f1f5f9;
-  color: #2563eb;
+  background-color: var(--light-purple);
+  color: var(--primary-purple);
 }
 
 .side-bar a.active {
-  background-color: #2563eb;
+  background-color: var(--primary-purple);
   color: white;
 }
 
@@ -103,13 +112,13 @@ body {
 .settings-header h1 {
   font-size: 34px;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-main);
   margin-bottom: 8px;
 }
 
 .settings-header p {
   font-size: 15px;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .settings-card {
@@ -117,15 +126,15 @@ body {
   border-radius: 20px;
   padding: 28px;
   margin-bottom: 24px;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-  border: 1px solid #e2e8f0;
+  box-shadow: 0 12px 30px rgba(47, 54, 64, 0.08);
+  border: 1px solid var(--border-color);
 }
 
 .settings-card h2 {
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 22px;
-  color: #1e293b;
+  color: var(--text-main);
 }
 
 .input-group {
@@ -140,7 +149,7 @@ body {
   display: block;
   font-size: 15px;
   font-weight: 600;
-  color: #334155;
+  color: var(--text-main);
   margin-bottom: 10px;
 }
 
@@ -148,19 +157,19 @@ body {
 .input-group select {
   width: 100%;
   height: 52px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 0 16px;
   font-size: 15px;
-  color: #334155;
+  color: var(--text-main);
   background-color: white;
   outline: none;
 }
 
 .input-group input:focus,
 .input-group select:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+  border-color: var(--primary-purple);
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.18);
 }
 
 .checkbox-group {
@@ -178,14 +187,14 @@ body {
 .checkbox-group input {
   width: 18px;
   height: 18px;
-  accent-color: #2563eb;
+  accent-color: var(--primary-purple);
   cursor: pointer;
 }
 
 .checkbox-group label {
   font-size: 15px;
   font-weight: 500;
-  color: #334155;
+  color: var(--text-main);
   cursor: pointer;
 }
 
@@ -209,22 +218,23 @@ body {
 
 .cancel-button {
   background-color: white;
-  color: #334155;
-  border: 1px solid #cbd5e1;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
 }
 
 .cancel-button:hover {
-  background-color: #f8fafc;
+  background-color: var(--light-purple);
+  border-color: var(--primary-purple);
 }
 
 .save-button {
-  background-color: #2563eb;
+  background-color: var(--primary-purple);
   color: white;
   border: none;
 }
 
 .save-button:hover {
-  background-color: #1d4ed8;
+  background-color: #5a4bd8;
 }
 
 @media (max-width: 900px) {
@@ -237,7 +247,7 @@ body {
     flex-direction: row;
     overflow-x: auto;
     border-right: none;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-color);
   }
 
   .side-bar a {

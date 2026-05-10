@@ -1,91 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <!-- Responsive adjustment for a website -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
-  </head>
+<head>
+  <!-- Responsive adjustment for a website -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings</title>
 
-  <body>
+  <!-- External CSS file -->
+  <link rel="stylesheet" href="../static/css/setting.css">
 
-    <div class="top_bar">
-      <div class="user_profile">
-        <img src="default.png" alt="Profile Picture">
+  <!-- Font Awesome Icons -->
+  <link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  >
+</head>
+
+<body>
+
+  <div class="top-bar">
+    <div class="user-profile">
+      <img src="../static/img/default.jpg" alt="Profile Picture">
+      <div>
         <h1>Lynn Ta</h1>
+        <p>Student account</p>
       </div>
     </div>
+  </div>
 
-    <div class="page_layout">
+  <div class="page-layout">
 
-      <div class="side_bar">
+    <div class="side-bar">
 
-        <div class="dashboard_link">
-          <a href="dashboard.html">Dashboard</a>
-        </div>
+      <a href="index.html">
+        <i class="fa-solid fa-house"></i>
+        <span>Dashboard</span>
+      </a>
 
-        <div class="study_sets_link">
-          <a href="my-study-sets.html">My Study Sets</a>
-        </div>
+      <a href="base.html">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>My Study Sets</span>
+      </a>
 
-        <div class="search_link">
-          <a href="search.html">Search</a>
-        </div>
+      <a href="search.html">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span>Search</span>
+      </a>
 
-        <div class="create_set_link">
-          <a href="create-new-set.html">Create New Set</a>
-        </div>
+      <a href="create_studyset.html">
+        <i class="fa-solid fa-plus"></i>
+        <span>Create New Set</span>
+      </a>
 
-        <div class="analytics_link">
-          <a href="analytics.html">Analytics</a>
-        </div>
+      <a href="analytics.html">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Analytics</span>
+      </a>
 
-        <div class="settings_link">
-          <a href="settings.html">Settings</a>
-        </div>
+      <a href="setting.html" class="active">
+        <i class="fa-solid fa-gear"></i>
+        <span>Settings</span>
+      </a>
 
-        <div class="profile_link">
-          <a href="profile.html">Profile</a>
-        </div>
+      <a href="profile.html">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
+      </a>
 
+    </div>
+
+    <div class="settings-page">
+
+      <div class="settings-header">
+        <h1>Settings</h1>
+        <p>Manage your account preferences and notification settings.</p>
       </div>
 
-      <div class="settings_page">
+      <div class="settings-card">
+        <h2>Account</h2>
 
-        <div class="settings_header">
-          <h1>Settings</h1>
-          <p>Manage your account</p>
-        </div>
-
-        <div class="account_settings">
-          <h2>Account</h2>
-
+        <div class="input-group">
           <label for="username">Username</label>
           <input type="text" id="username" name="username" placeholder="abcxyz...">
+        </div>
 
+        <div class="input-group">
           <label for="email">Email</label>
           <input type="email" id="email" name="email" placeholder="a@gmail.com">
         </div>
+      </div>
 
-        <div class="notification_settings">
-          <h2>Notifications</h2>
+      <div class="settings-card">
+        <h2>Notifications</h2>
 
+        <div class="checkbox-group">
           <input type="checkbox" id="study_reminder" name="study_reminder">
           <label for="study_reminder">Study reminder</label>
+        </div>
 
+        <div class="checkbox-group">
           <input type="checkbox" id="daily_goal" name="daily_goal">
           <label for="daily_goal">Daily goal notifications</label>
+        </div>
 
+        <div class="checkbox-group">
           <input type="checkbox" id="friend_activities" name="friend_activities">
           <label for="friend_activities">Friend activities</label>
+        </div>
 
+        <div class="checkbox-group">
           <input type="checkbox" id="new_study_set_updates" name="new_study_set_updates">
           <label for="new_study_set_updates">New study set updates</label>
         </div>
+      </div>
 
-        <div class="language_settings">
-          <h2>Language</h2>
+      <div class="settings-card">
+        <h2>Language</h2>
+
+        <div class="input-group">
+          <label for="language">Preferred language</label>
 
           <select id="language" name="language">
             <option value="english">English</option>
@@ -94,11 +128,17 @@
             <option value="spanish">Spanish</option>
           </select>
         </div>
+      </div>
 
+      <div class="button-row">
+        <button type="button" class="cancel-button">Cancel</button>
+        <button type="submit" class="save-button">Save Changes</button>
       </div>
 
     </div>
 
-  </body>
+  </div>
+
+</body>
 
 </html>

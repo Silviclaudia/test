@@ -765,3 +765,126 @@ def test_analytics_shows_real_user_stats():
     assert b"Biology 10" in response.data
     assert b"Chemistry " in response.data
     assert b"Physics 101" not in response.data
+
+
+def test_search_page_requires_login():
+    app = create_app(TestConfig)
+
+    with app.test_client() as client:
+        response = client.get("/search")
+
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_search_page_shows_only_public_sets_and_filters():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        other_user = User(username="alice", email="alice@example.com")
+        other_user.set_password("secure-password")
+        db.session.add_all([user, other_user])
+        db.session.commit()
+
+        private_set = StudySet(
+            title="Private French",
+            description="Hidden set",
+            is_public=False,
+            owner=other_user,
+            flashcards=[Flashcard(question="bonjour", answer="hello")],
+        )
+        public_set = StudySet(
+            title="Public Biology",
+            description="Cells and DNA",
+            is_public=True,
+            owner=other_user,
+            flashcards=[Flashcard(question="cell", answer="basic unit of life")],
+        )
+        public_set_two = StudySet(
+            title="Public History",
+            description="Ancient empires",
+            is_public=True,
+            owner=user,
+            flashcards=[Flashcard(question="rome", answer="empire")],
+        )
+        db.session.add_all([private_set, public_set, public_set_two])
+        db.session.commit()
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        response = client.get("/search?q=Biology")
+
+    assert response.status_code == 200
+    assert b"Public Biology" in response.data
+    assert b"Public History" not in response.data
+    assert b"Private French" not in response.data
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        owner_response = client.get("/search?owner=alice")
+
+    assert owner_response.status_code == 200
+    assert b"Public Biology" in owner_response.data
+    assert b"Public History" not in owner_response.data
+
+
+def test_browse_public_study_set_blocks_private():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        other_user = User(username="alice", email="alice@example.com")
+        other_user.set_password("secure-password")
+        db.session.add_all([user, other_user])
+        db.session.commit()
+
+        public_set = StudySet(
+            title="Public Biology",
+            description="Visible set",
+            is_public=True,
+            owner=other_user,
+            flashcards=[Flashcard(question="cell", answer="basic unit of life")],
+        )
+        private_set = StudySet(
+            title="Private Biology",
+            description="Hidden set",
+            is_public=False,
+            owner=other_user,
+            flashcards=[Flashcard(question="dna", answer="genetic material")],
+        )
+        db.session.add_all([public_set, private_set])
+        db.session.commit()
+        public_id = public_set.id
+        private_id = private_set.id
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        public_response = client.get(f"/browse/study-sets/{public_id}")
+        private_response = client.get(f"/browse/study-sets/{private_id}")
+
+    assert public_response.status_code == 200
+    assert b"Public Biology" in public_response.data
+    assert private_response.status_code == 404

@@ -500,6 +500,13 @@ a {
     max-width: 760px;
 }
 
+.search-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: end;
+}
+
 .card-section {
     margin-bottom: 1rem;
     padding: 1.2rem 1.25rem;
@@ -530,6 +537,11 @@ a {
     font: inherit;
     color: inherit;
     background: #ffffff;
+}
+
+.search-form .button {
+    border: 0;
+    cursor: pointer;
 }
 
 .ai-header {
@@ -635,6 +647,10 @@ a {
     }
 
     .options-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-form {
         grid-template-columns: 1fr;
     }
 

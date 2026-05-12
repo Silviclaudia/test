@@ -26,14 +26,14 @@
                     <i class="fa-solid fa-house"></i>
                     <span>Dashboard</span>
                 </a>
-                <a class="nav-item {% if request.endpoint in ['main.study_sets', 'main.study_set_detail', 'main.study_set_study'] %}active{% endif %}" href="{{ url_for('main.study_sets') }}">
+                <a class="nav-item {% if request.endpoint in ['main.study_sets', 'main.study_set_detail', 'main.study_set_study', 'main.edit_study_set'] %}active{% endif %}" href="{{ url_for('main.study_sets') }}">
                     <i class="fa-solid fa-book"></i>
                     <span>My Study Sets</span>
                 </a>
-                <span class="nav-item nav-item-disabled" aria-disabled="true">
+                <a class="nav-item {% if request.endpoint in ['main.search_public_sets', 'main.browse_public_study_set'] %}active{% endif %}" href="{{ url_for('main.search_public_sets') }}">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <span>Search</span>
-                </span>
+                </a>
                 <a class="nav-item {% if request.endpoint == 'main.create_study_set' %}active{% endif %}" href="{{ url_for('main.create_study_set') }}">
                     <i class="fa-solid fa-plus"></i>
                     <span>Create New Set</span>

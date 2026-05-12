@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Browse {{ study_set.title }} | Study Dashboard{% endblock %}
+
+{% block content %}
+<section class="profile">
+    <div class="profile-info">
+        <a class="back-link" href="{{ url_for('main.search_public_sets') }}">Back to search</a>
+        <h1>{{ study_set.title }}</h1>
+        <p>{{ study_set.description or "No description yet." }}</p>
+        <p>Shared by {{ study_set.owner.username }}</p>
+    </div>
+</section>
+
+<section class="study-set-container">
+    <div class="section-heading">
+        <h2>Flashcards</h2>
+    </div>
+    {% if study_set.flashcards %}
+        {% for flashcard in study_set.flashcards %}
+            <article class="flashcard-row">
+                <div>
+                    <span class="flashcard-label">Term</span>
+                    <h3>{{ flashcard.question }}</h3>
+                </div>
+                <div>
+                    <span class="flashcard-label">Definition</span>
+                    <p>{{ flashcard.answer }}</p>
+                </div>
+            </article>
+        {% endfor %}
+    {% else %}
+        <div class="study-item">
+            <h3>No flashcards in this set yet</h3>
+            <p>Check back later for updates.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -22,4 +22,9 @@ def create_app(config_class=Config):
 
     app.register_blueprint(main)
 
+    @app.cli.command("init-db")
+    def init_db():
+        db.create_all()
+        print("Initialized the database.")
+
     return app

@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-from app.models import User
+
 from app import db
+from app.models import User
+
 
 main = Blueprint("main", __name__)
 
@@ -10,27 +12,36 @@ main = Blueprint("main", __name__)
 def index():
     return render_template("index.html")
 
-@main.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
-    
-    if request.method == 'POST':
-        # Change 'username' to 'email' to match your HTML name="email"
-        email_or_user = request.form.get('email') 
-        password = request.form.get('password')
-        
-        # Search by email instead
-        user = User.query.filter_by(email=email_or_user).first()
-        
-        if user and user.check_password(password):
-            login_user(user)
-            return redirect(url_for('main.analytics'))
-        else:
-            flash('Invalid email or password')
-            
-    return render_template('login.html')
-   
+
+@main.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
+        confirm_password = request.form.get("confirm_password", "")
+
+        if password != confirm_password:
+            flash("Passwords do not match.")
+            return render_template("register.html"), 400
+
+        existing_user = User.query.filter(
+            (User.username == username) | (User.email == email)
+        ).first()
+        if existing_user:
+            flash("An account with that name or email already exists.")
+            return render_template("register.html"), 400
+
+        user = User(username=username, email=email)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+
+        flash("Account created. You can now sign in.")
+        return redirect(url_for("main.index"))
+
+    return render_template("register.html")
+
 @main.route('/analytics')
 
 def analytics():

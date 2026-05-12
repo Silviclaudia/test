@@ -4,8 +4,8 @@
         <!-- Responsive adjustment for a website -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title> Register</title>
-        <link rel="stylesheet" href = "registerstyle.css">
+        <title>Register</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/registerstyle.css') }}">
     </head>
     <body>
         <div class="content">
@@ -13,8 +13,17 @@
             <h1>Create your account</h1>
             <h4>Start your learning with us</h4>
             </div>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="form-errors" role="alert">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
             <!-- User form to routing a register URL to receive response from server -->
-            <form action="register.html" method="post">
+            <form action="{{ url_for('main.register') }}" method="post">
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" required>
 
@@ -30,12 +39,12 @@
                 <div class="terms-group">
                     <input type="checkbox" id="terms" name="terms" required>
                     <label for="terms">I agree to the
-                    <a href="terms.html" class="text-purple-600 font-medium">Terms and Conditions</a></label>
+                    <a href="#" class="text-purple-600 font-medium">Terms and Conditions</a></label>
                 </div>
 
                 <button type="submit" class="submit-btn">Create Account</button>
 
-                <p class="sign-in-page"> Already have an account? </p> <a href="login.html">Sign In</a>
+                <p class="sign-in-page"> Already have an account? </p> <a href="#">Sign In</a>
             </div>
             </form>
         </div>

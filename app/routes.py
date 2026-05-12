@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
 from app import db
@@ -124,6 +124,19 @@ def study_sets():
         study_sets=user_study_sets,
         total_cards=total_cards,
     )
+
+
+@main.route("/study-sets/<int:study_set_id>")
+@login_required
+def study_set_detail(study_set_id):
+    study_set = StudySet.query.filter_by(
+        id=study_set_id,
+        user_id=current_user.id,
+    ).first()
+    if study_set is None:
+        abort(404)
+
+    return render_template("study_set.html", study_set=study_set)
 
 @main.route('/analytics')
 

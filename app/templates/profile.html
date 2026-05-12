@@ -31,7 +31,11 @@
         {% for study_set in study_sets %}
             <article class="study-item">
                 <div>
-                    <h3>{{ study_set.title }}</h3>
+                    <h3>
+                        <a href="{{ url_for('main.study_set_detail', study_set_id=study_set.id) }}">
+                            {{ study_set.title }}
+                        </a>
+                    </h3>
                     {% if study_set.description %}
                         <p>{{ study_set.description }}</p>
                     {% else %}

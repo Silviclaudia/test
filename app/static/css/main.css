@@ -409,6 +409,102 @@ a {
     font-weight: 700;
 }
 
+.form-errors {
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+    background: #fff3f3;
+    border: 1px solid #ffd4d4;
+    border-radius: 0.55rem;
+    color: #8d2c2c;
+}
+
+.form-errors p {
+    margin: 0.2rem 0;
+    font-size: 0.9rem;
+}
+
+.create-set-wrapper {
+    max-width: 760px;
+}
+
+.card-section {
+    margin-bottom: 1rem;
+    padding: 1.2rem 1.25rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.65rem;
+    box-shadow: var(--shadow);
+}
+
+.card-section h3 {
+    margin: 0 0 0.8rem;
+}
+
+.card-section label {
+    display: block;
+    margin: 0.8rem 0 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.card-section input[type="text"],
+.card-section textarea {
+    width: 100%;
+    margin: 0;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    font: inherit;
+    color: inherit;
+    background: #ffffff;
+}
+
+.ai-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 999px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.hint {
+    margin: 0.45rem 0 0.7rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+
+.btn-ai {
+    display: inline-flex;
+    border: 0;
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+}
+
+.form-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    justify-content: space-between;
+}
+
 .set-list {
     overflow: hidden;
 }
@@ -463,6 +559,10 @@ a {
     .flashcard-row {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .options-grid {
+        grid-template-columns: 1fr;
     }
 
     .hero-sketch {

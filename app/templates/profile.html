@@ -30,13 +30,15 @@
     {% if study_sets %}
         {% for study_set in study_sets %}
             <article class="study-item">
-                <h3>{{ study_set.title }}</h3>
-                {% if study_set.description %}
-                    <p>{{ study_set.description }}</p>
-                {% else %}
-                    <p>No description yet.</p>
-                {% endif %}
-                <p>{{ study_set.flashcards|length }} cards</p>
+                <div>
+                    <h3>{{ study_set.title }}</h3>
+                    {% if study_set.description %}
+                        <p>{{ study_set.description }}</p>
+                    {% else %}
+                        <p>No description yet.</p>
+                    {% endif %}
+                </div>
+                <span class="card-count">{{ study_set.flashcards|length }} cards</span>
             </article>
         {% endfor %}
     {% else %}

@@ -219,6 +219,107 @@ a {
     font-weight: 600;
 }
 
+.profile {
+    margin-bottom: 1.6rem;
+}
+
+.profile-info h1 {
+    margin: 0 0 0.55rem;
+    font-size: clamp(2rem, 3.4vw, 3rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+}
+
+.profile-info p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.analytics-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 2.4rem;
+}
+
+.stat-card,
+.study-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.65rem;
+    box-shadow: var(--shadow);
+}
+
+.stat-card {
+    padding: 1.3rem 1.45rem;
+}
+
+.stat-card h2 {
+    margin: 0 0 0.25rem;
+    color: var(--primary);
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.stat-card h3 {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.study-set-container .section-heading {
+    margin-bottom: 1rem;
+}
+
+.study-set-container .section-heading h2 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.study-set-container .section-heading a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 0.9rem;
+    border-radius: 0.45rem;
+    background: var(--primary);
+    color: #ffffff;
+    box-shadow: 0 8px 16px rgba(90, 79, 220, 0.18);
+}
+
+.study-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.85rem;
+    padding: 1rem 1.15rem;
+}
+
+.study-item h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1rem;
+}
+
+.study-item p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.45;
+}
+
+.card-count {
+    flex: 0 0 auto;
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
 .set-list {
     overflow: hidden;
 }
@@ -262,10 +363,16 @@ a {
     }
 
     .hero,
+    .analytics-container,
     .mode-list,
     .set-row {
         display: grid;
         grid-template-columns: 1fr;
+    }
+
+    .study-item {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
     .hero-sketch {

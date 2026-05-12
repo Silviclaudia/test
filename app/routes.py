@@ -10,7 +10,13 @@ main = Blueprint("main", __name__)
 
 @main.route("/")
 def index():
-    return render_template("index.html")
+    recent_public_sets = (
+        StudySet.query.filter_by(is_public=True)
+        .order_by(StudySet.id.desc())
+        .limit(5)
+        .all()
+    )
+    return render_template("index.html", recent_public_sets=recent_public_sets)
 
 
 @main.route("/register", methods=["GET", "POST"])

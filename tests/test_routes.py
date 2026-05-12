@@ -12,11 +12,50 @@ class TestConfig:
 def test_homepage_loads():
     app = create_app(TestConfig)
 
+    with app.app_context():
+        db.create_all()
+
     with app.test_client() as client:
         response = client.get("/")
 
     assert response.status_code == 200
     assert b"Good to see you" in response.data
+
+
+def test_homepage_shows_recent_public_study_sets_only():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        db.session.add(user)
+        db.session.commit()
+
+        private_set = StudySet(
+            title="Private Set",
+            description="Should not appear on homepage",
+            is_public=False,
+            owner=user,
+            flashcards=[Flashcard(question="Secret", answer="Hidden")],
+        )
+        public_set = StudySet(
+            title="Public Biology Set",
+            description="Should appear on homepage",
+            is_public=True,
+            owner=user,
+            flashcards=[Flashcard(question="Cell", answer="Basic unit of life")],
+        )
+        db.session.add_all([private_set, public_set])
+        db.session.commit()
+
+    with app.test_client() as client:
+        response = client.get("/")
+
+    assert response.status_code == 200
+    assert b"Public Biology Set" in response.data
+    assert b"Private Set" not in response.data
+    assert b"by studyuser" in response.data
 
 
 def test_register_page_loads():

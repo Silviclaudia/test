@@ -16,18 +16,21 @@ def login():
         return redirect(url_for('main.index'))
     
     if request.method == 'POST':
-        username = request.form.get('username')
+        # Change 'username' to 'email' to match your HTML name="email"
+        email_or_user = request.form.get('email') 
         password = request.form.get('password')
-        user = User.query.filter_by(username=username).first()
+        
+        # Search by email instead
+        user = User.query.filter_by(email=email_or_user).first()
         
         if user and user.check_password(password):
             login_user(user)
             return redirect(url_for('main.analytics'))
         else:
-            flash('Invalid username or password')
+            flash('Invalid email or password')
             
     return render_template('login.html')
-
+   
 @main.route('/analytics')
 
 def analytics():

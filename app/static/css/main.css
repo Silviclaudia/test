@@ -230,6 +230,35 @@ a {
     font-weight: 600;
 }
 
+.inline-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.button-danger {
+    background: #d84848;
+    color: #ffffff;
+    box-shadow: 0 8px 16px rgba(216, 72, 72, 0.2);
+}
+
+.inline-delete-form {
+    margin: 0.2rem 0 1rem;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 1rem;
+    font-weight: 600;
+}
+
+.checkbox-row input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+}
+
 .profile {
     margin-bottom: 1.6rem;
 }

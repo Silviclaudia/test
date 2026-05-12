@@ -17,15 +17,15 @@
 <section class="study-modes" aria-labelledby="study-mode-heading">
     <h2 id="study-mode-heading">Study modes</h2>
     <div class="mode-list">
-        <article class="feature-card">
-            <span class="icon-bubble">
-                <i class="fa-regular fa-copy"></i>
-            </span>
-            <div>
-                <h3>Flip Mode</h3>
-                <p>Go through your cards one by one.</p>
-            </div>
-        </article>
+        <a href="{{ url_for('main.index') }}" class="feature-link"> 
+            <article class="feature-card">
+                <span class="icon-bubble"><i class="fa-regular fa-copy"></i></span>
+                <div>
+                    <h3>Flip Mode</h3>
+                    <p>Go through your cards one by one.</p>
+                </div>
+            </article>
+        </a>
         <article class="feature-card">
             <span class="icon-bubble">
                 <i class="fa-regular fa-circle-question"></i>

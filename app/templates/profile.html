@@ -1,44 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <!-- Responsive adjustment for a website -->
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title> Profile </title>
-        <link rel="stylesheet" href="profilestyle.css">
-    </head>
-    <body>
+{% extends "base.html" %}
 
-        <div class="main-content">
+{% block title %}My Study Sets | Study Dashboard{% endblock %}
 
-            <div class="profile">
-                <img src="default.jpg" alt="Profile Picture">
-                <div class="profile-info">
-                    <h2> User Name </h2>
-                </div>
-        </div>
-
-        <div class="analytics-container">
-            <div class="stat-card">
-            <h2> Number Cards </h2><h3> Cards Study</h3>
-            </div>
-            <div class="stat-card">
-            <h2> Number Days </h2><h3> Study Streak</h3>
-            </div>
-            <div class="stat-card">
-            <h2> Numbers Achievements</h2><h3> Achievement</h3>
-            </div>
-        </div>
-
-        <div class="study-set-container">
-            <h2> My Study Sets</h2>
-
-            <div class="study-item">
-                <h2> Title Set </h2>
-                <h3> Description </h3>
-            </div>
-        </div>
+{% block content %}
+<section class="profile">
+    <div class="profile-info">
+        <h1>{{ current_user.username }}'s study sets</h1>
+        <p>Review and manage the flashcard sets you have created.</p>
     </div>
-    </body>
-</html>
+</section>
 
+<section class="analytics-container" aria-label="Study set summary">
+    <div class="stat-card">
+        <h2>{{ study_sets|length }}</h2>
+        <h3>Study Sets</h3>
+    </div>
+    <div class="stat-card">
+        <h2>{{ total_cards }}</h2>
+        <h3>Cards Created</h3>
+    </div>
+</section>
+
+<section class="study-set-container">
+    <div class="section-heading">
+        <h2>My Study Sets</h2>
+        <a href="{{ url_for('main.create_study_set') }}">Create new set</a>
+    </div>
+
+    {% if study_sets %}
+        {% for study_set in study_sets %}
+            <article class="study-item">
+                <h3>{{ study_set.title }}</h3>
+                {% if study_set.description %}
+                    <p>{{ study_set.description }}</p>
+                {% else %}
+                    <p>No description yet.</p>
+                {% endif %}
+                <p>{{ study_set.flashcards|length }} cards</p>
+            </article>
+        {% endfor %}
+    {% else %}
+        <div class="study-item">
+            <h3>No study sets yet</h3>
+            <p>Create your first flashcard set to start studying.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

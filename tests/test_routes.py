@@ -216,3 +216,86 @@ def test_create_study_set_saves_flashcards_for_logged_in_user():
         assert flashcards[0].answer == "Basic unit of life"
         assert flashcards[1].question == "Nucleus"
         assert flashcards[1].answer == "Controls the cell"
+
+
+def test_study_sets_page_requires_login():
+    app = create_app(TestConfig)
+
+    with app.test_client() as client:
+        response = client.get("/study-sets")
+
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_study_sets_page_shows_current_users_sets_only():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        other_user = User(username="otheruser", email="other@example.com")
+        other_user.set_password("secure-password")
+        db.session.add_all([user, other_user])
+        db.session.commit()
+
+        biology = StudySet(
+            title="Biology 101",
+            description="Cell basics",
+            owner=user,
+            flashcards=[
+                Flashcard(question="Cell", answer="Basic unit of life"),
+                Flashcard(question="Nucleus", answer="Controls the cell"),
+            ],
+        )
+        chemistry = StudySet(
+            title="Chemistry 101",
+            description="Atoms and molecules",
+            owner=other_user,
+            flashcards=[
+                Flashcard(question="Atom", answer="Small unit of matter"),
+            ],
+        )
+        db.session.add_all([biology, chemistry])
+        db.session.commit()
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        response = client.get("/study-sets")
+
+    assert response.status_code == 200
+    assert b"Biology 101" in response.data
+    assert b"Cell basics" in response.data
+    assert b"2 cards" in response.data
+    assert b"Chemistry 101" not in response.data
+
+
+def test_study_sets_page_shows_empty_state():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        db.session.add(user)
+        db.session.commit()
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        response = client.get("/study-sets")
+
+    assert response.status_code == 200
+    assert b"No study sets yet" in response.data

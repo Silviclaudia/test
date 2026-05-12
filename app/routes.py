@@ -109,6 +109,22 @@ def create_study_set():
 
     return render_template("create_studyset.html")
 
+
+@main.route("/study-sets")
+@login_required
+def study_sets():
+    user_study_sets = (
+        StudySet.query.filter_by(user_id=current_user.id)
+        .order_by(StudySet.id.desc())
+        .all()
+    )
+    total_cards = sum(len(study_set.flashcards) for study_set in user_study_sets)
+    return render_template(
+        "profile.html",
+        study_sets=user_study_sets,
+        total_cards=total_cards,
+    )
+
 @main.route('/analytics')
 
 def analytics():

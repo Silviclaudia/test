@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.models import User
+from app.models import Flashcard, StudySet, User
 
 
 class TestConfig:
@@ -139,3 +139,80 @@ def test_logout_clears_session():
         assert response.status_code == 302
         with client.session_transaction() as session:
             assert "_user_id" not in session
+
+
+def test_create_study_set_page_requires_login():
+    app = create_app(TestConfig)
+
+    with app.test_client() as client:
+        response = client.get("/study-sets/new")
+
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_create_study_set_page_loads_for_logged_in_user():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        db.session.add(user)
+        db.session.commit()
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        response = client.get("/study-sets/new")
+
+    assert response.status_code == 200
+    assert b"Create New Study Set" in response.data
+
+
+def test_create_study_set_saves_flashcards_for_logged_in_user():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        db.session.add(user)
+        db.session.commit()
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        response = client.post(
+            "/study-sets/new",
+            data={
+                "title": "Biology 101",
+                "description": "Cell basics",
+                "term": ["Cell", "Nucleus"],
+                "definition": ["Basic unit of life", "Controls the cell"],
+            },
+        )
+
+    assert response.status_code == 302
+
+    with app.app_context():
+        study_set = StudySet.query.filter_by(title="Biology 101").one()
+        assert study_set.description == "Cell basics"
+        assert study_set.owner.username == "studyuser"
+
+        flashcards = Flashcard.query.order_by(Flashcard.id).all()
+        assert len(flashcards) == 2
+        assert flashcards[0].question == "Cell"
+        assert flashcards[0].answer == "Basic unit of life"
+        assert flashcards[1].question == "Nucleus"
+        assert flashcards[1].answer == "Controls the cell"

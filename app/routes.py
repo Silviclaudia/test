@@ -2,7 +2,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
 from app import db
-from app.models import User
+from app.models import Flashcard, StudySet, User
 
 
 main = Blueprint("main", __name__)
@@ -74,6 +74,40 @@ def logout():
     logout_user()
     flash("You have been signed out.")
     return redirect(url_for("main.index"))
+
+
+@main.route("/study-sets/new", methods=["GET", "POST"])
+@login_required
+def create_study_set():
+    if request.method == "POST":
+        title = request.form.get("title", "").strip()
+        description = request.form.get("description", "").strip()
+        terms = request.form.getlist("term")
+        definitions = request.form.getlist("definition")
+
+        flashcards = [
+            Flashcard(question=term.strip(), answer=definition.strip())
+            for term, definition in zip(terms, definitions)
+            if term.strip() and definition.strip()
+        ]
+
+        if not title or not flashcards:
+            flash("Add a title and at least one complete flashcard.")
+            return render_template("create_studyset.html"), 400
+
+        study_set = StudySet(
+            title=title,
+            description=description,
+            owner=current_user,
+            flashcards=flashcards,
+        )
+        db.session.add(study_set)
+        db.session.commit()
+
+        flash("Study set created.")
+        return redirect(url_for("main.index"))
+
+    return render_template("create_studyset.html")
 
 @main.route('/analytics')
 

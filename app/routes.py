@@ -160,23 +160,32 @@ def study_set_study(study_set_id):
 @main.route('/analytics')
 
 def analytics():
-    totalcards = sum(len(s_set.flashcards) for s_set in current_user.study_sets)
+    user_study_sets = (
+        StudySet.query.filter_by(user_id=current_user.id)
+        .order_by(StudySet.id.desc())
+        .all()
+    )
+    total_sets = len(user_study_sets)
+    total_cards = sum(len(study_set.flashcards) for study_set in user_study_sets)
+    public_sets = sum(1 for study_set in user_study_sets if study_set.is_public)
+    average_cards = round(total_cards / total_sets, 1) if total_sets else 0
 
-    #data for the visuals 
-    stats = {
-        'cards': totalcards, 
-        'accuracy': 90,
-        'streak': 13, 
-        'chart_data': [50, 65, 78, 42, 61, 20, 40]
-    }
+    recent_sets = user_study_sets[:7]
+    raw_chart_values = [len(study_set.flashcards) for study_set in reversed(recent_sets)]
+    chart_labels = [study_set.title[:10] for study_set in reversed(recent_sets)]
+    if not raw_chart_values:
+        raw_chart_values = [0]
+        chart_labels = ["No sets"]
 
-    return render_template('analytics.html', **stats)
+    max_value = max(raw_chart_values) or 1
+    chart_data = [int((value / max_value) * 100) for value in raw_chart_values]
 
-@main.route('/register')
-def register():
-    return render_template('register.html')
-
-@main.route('/create')
-@login_required
-def create_studyset():
-    return render_template('create_studyset.html')
+    return render_template(
+        "analytics.html",
+        total_cards=total_cards,
+        total_sets=total_sets,
+        public_sets=public_sets,
+        average_cards=average_cards,
+        chart_data=chart_data,
+        chart_labels=chart_labels,
+    )

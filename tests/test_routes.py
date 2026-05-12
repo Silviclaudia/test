@@ -544,3 +544,73 @@ def test_study_mode_hides_other_users_sets():
         response = client.get(f"/study-sets/{study_set_id}/study")
 
     assert response.status_code == 404
+
+
+def test_analytics_shows_real_user_stats():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        other_user = User(username="otheruser", email="other@example.com")
+        other_user.set_password("secure-password")
+        db.session.add_all([user, other_user])
+        db.session.commit()
+
+        user_set_one = StudySet(
+            title="Biology 101",
+            description="Cell basics",
+            is_public=True,
+            owner=user,
+            flashcards=[
+                Flashcard(question="Cell", answer="Basic unit of life"),
+                Flashcard(question="Nucleus", answer="Controls the cell"),
+            ],
+        )
+        user_set_two = StudySet(
+            title="Chemistry 101",
+            description="Atoms",
+            is_public=False,
+            owner=user,
+            flashcards=[
+                Flashcard(question="Atom", answer="Small unit of matter"),
+            ],
+        )
+        other_set = StudySet(
+            title="Physics 101",
+            description="For another user",
+            is_public=True,
+            owner=other_user,
+            flashcards=[
+                Flashcard(question="Force", answer="Push or pull"),
+                Flashcard(question="Mass", answer="Amount of matter"),
+                Flashcard(question="Energy", answer="Ability to do work"),
+            ],
+        )
+        db.session.add_all([user_set_one, user_set_two, other_set])
+        db.session.commit()
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        response = client.get("/analytics")
+
+    assert response.status_code == 200
+    assert b"Analytics" in response.data
+    assert b"Total Cards" in response.data
+    assert b"Total Study Sets" in response.data
+    assert b"Public Study Sets" in response.data
+    assert b"Avg Cards Per Set" in response.data
+    assert b">3<" in response.data
+    assert b">2<" in response.data
+    assert b">1<" in response.data
+    assert b">1.5<" in response.data
+    assert b"Biology 10" in response.data
+    assert b"Chemistry " in response.data
+    assert b"Physics 101" not in response.data

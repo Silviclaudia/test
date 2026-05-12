@@ -34,12 +34,32 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
+In Windows:
+# Create venv
+python -m venv venv
+
+# Activate (Windows)
+.\venv\Scripts\activate
+
 Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 
-pip install flask flask-sqlalchemy flask-login
+```
+
+Create the database:
+
+```bash
+python -m flask shell
+```
+Then type:
+```python
+from app import db
+db.create_all()
+exit()
+```
+
 ```
 
 Start the Flask development server:
@@ -54,4 +74,14 @@ Open <http://127.0.0.1:5000> in your browser.
 
 ```bash
 pytest
+```
+
+# Common Issues
+`no such table` error
+Database tables haven't been created yet. Run:
+```bash
+python -m flask shell
+>>> from app import db
+>>> db.create_all()
+>>> exit()
 ```

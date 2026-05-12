@@ -207,6 +207,7 @@ def test_create_study_set_saves_flashcards_for_logged_in_user():
 
     with app.app_context():
         study_set = StudySet.query.filter_by(title="Biology 101").one()
+        assert response.headers["Location"].endswith(f"/study-sets/{study_set.id}")
         assert study_set.description == "Cell basics"
         assert study_set.owner.username == "studyuser"
 
@@ -216,6 +217,34 @@ def test_create_study_set_saves_flashcards_for_logged_in_user():
         assert flashcards[0].answer == "Basic unit of life"
         assert flashcards[1].question == "Nucleus"
         assert flashcards[1].answer == "Controls the cell"
+
+
+def test_dashboard_navigation_links_to_working_routes():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        db.session.add(user)
+        db.session.commit()
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        response = client.get("/")
+
+    assert response.status_code == 200
+    assert b'href="/"' in response.data
+    assert b'href="/study-sets"' in response.data
+    assert b'href="/study-sets/new"' in response.data
+    assert b'href="/analytics"' in response.data
+    assert b"nav-item-disabled" in response.data
 
 
 def test_study_sets_page_requires_login():

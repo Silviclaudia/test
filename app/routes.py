@@ -105,7 +105,7 @@ def create_study_set():
         db.session.commit()
 
         flash("Study set created.")
-        return redirect(url_for("main.index"))
+        return redirect(url_for("main.study_set_detail", study_set_id=study_set.id))
 
     return render_template("create_studyset.html")
 

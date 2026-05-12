@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Study {{ study_set.title }} | Study Dashboard{% endblock %}
+
+{% block content %}
+<section class="profile">
+    <div class="profile-info">
+        <a class="back-link" href="{{ url_for('main.study_set_detail', study_set_id=study_set.id) }}">Back to study set</a>
+        <h1>Study {{ study_set.title }}</h1>
+        <p>Flip each card to review the answer, then move through the set at your own pace.</p>
+    </div>
+</section>
+
+{% if study_set.flashcards %}
+    <section class="study-review" aria-label="Flashcard review">
+        <p class="study-progress">
+            Card <span id="current-card-number">1</span> of {{ study_set.flashcards|length }}
+        </p>
+
+        <article class="review-card" id="review-card">
+            <span class="flashcard-label" id="review-card-label">Term</span>
+            <h2 id="review-card-text">{{ study_set.flashcards[0].question }}</h2>
+        </article>
+
+        <div class="review-actions">
+            <button type="button" class="button button-secondary" id="previous-card">Previous</button>
+            <button type="button" class="button" id="flip-card">Show answer</button>
+            <button type="button" class="button button-secondary" id="next-card">Next</button>
+        </div>
+    </section>
+
+    <script>
+        const flashcards = {{ study_set.flashcards|map(attribute='question')|list|tojson }};
+        const answers = {{ study_set.flashcards|map(attribute='answer')|list|tojson }};
+        let currentIndex = 0;
+        let showingAnswer = false;
+
+        const currentCardNumber = document.querySelector("#current-card-number");
+        const reviewCardLabel = document.querySelector("#review-card-label");
+        const reviewCardText = document.querySelector("#review-card-text");
+        const flipCardButton = document.querySelector("#flip-card");
+        const previousCardButton = document.querySelector("#previous-card");
+        const nextCardButton = document.querySelector("#next-card");
+
+        function renderCard() {
+            currentCardNumber.textContent = currentIndex + 1;
+            reviewCardLabel.textContent = showingAnswer ? "Definition" : "Term";
+            reviewCardText.textContent = showingAnswer ? answers[currentIndex] : flashcards[currentIndex];
+            flipCardButton.textContent = showingAnswer ? "Show term" : "Show answer";
+            previousCardButton.disabled = currentIndex === 0;
+            nextCardButton.disabled = currentIndex === flashcards.length - 1;
+        }
+
+        flipCardButton.addEventListener("click", () => {
+            showingAnswer = !showingAnswer;
+            renderCard();
+        });
+
+        previousCardButton.addEventListener("click", () => {
+            if (currentIndex > 0) {
+                currentIndex -= 1;
+                showingAnswer = false;
+                renderCard();
+            }
+        });
+
+        nextCardButton.addEventListener("click", () => {
+            if (currentIndex < flashcards.length - 1) {
+                currentIndex += 1;
+                showingAnswer = false;
+                renderCard();
+            }
+        });
+
+        renderCard();
+    </script>
+{% else %}
+    <section class="study-item">
+        <h3>No flashcards yet</h3>
+        <p>Add flashcards before starting a study session.</p>
+    </section>
+{% endif %}
+{% endblock %}

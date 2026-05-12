@@ -138,6 +138,19 @@ def study_set_detail(study_set_id):
 
     return render_template("study_set.html", study_set=study_set)
 
+
+@main.route("/study-sets/<int:study_set_id>/study")
+@login_required
+def study_set_study(study_set_id):
+    study_set = StudySet.query.filter_by(
+        id=study_set_id,
+        user_id=current_user.id,
+    ).first()
+    if study_set is None:
+        abort(404)
+
+    return render_template("study_mode.html", study_set=study_set)
+
 @main.route('/analytics')
 
 def analytics():

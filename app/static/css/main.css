@@ -343,6 +343,51 @@ a {
     text-transform: uppercase;
 }
 
+.study-review {
+    max-width: 720px;
+}
+
+.study-progress {
+    margin: 0 0 0.8rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.review-card {
+    display: grid;
+    align-content: center;
+    min-height: 280px;
+    margin-bottom: 1.1rem;
+    padding: 2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+    box-shadow: var(--shadow);
+}
+
+.review-card h2 {
+    margin: 0;
+    font-size: clamp(1.7rem, 3vw, 2.6rem);
+    line-height: 1.2;
+}
+
+.review-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.review-actions button {
+    border: 0;
+    cursor: pointer;
+}
+
+.review-actions button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
 .card-count {
     flex: 0 0 auto;
     padding: 0.35rem 0.65rem;

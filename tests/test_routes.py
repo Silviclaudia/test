@@ -388,3 +388,91 @@ def test_study_set_detail_hides_other_users_sets():
         response = client.get(f"/study-sets/{study_set_id}")
 
     assert response.status_code == 404
+
+
+def test_study_mode_requires_login():
+    app = create_app(TestConfig)
+
+    with app.test_client() as client:
+        response = client.get("/study-sets/1/study")
+
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_study_mode_shows_first_flashcard_for_owner():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        db.session.add(user)
+        db.session.commit()
+
+        study_set = StudySet(
+            title="Biology 101",
+            description="Cell basics",
+            owner=user,
+            flashcards=[
+                Flashcard(question="Cell", answer="Basic unit of life"),
+                Flashcard(question="Nucleus", answer="Controls the cell"),
+            ],
+        )
+        db.session.add(study_set)
+        db.session.commit()
+        study_set_id = study_set.id
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        response = client.get(f"/study-sets/{study_set_id}/study")
+
+    assert response.status_code == 200
+    assert b"Study Biology 101" in response.data
+    assert b"Card <span id=\"current-card-number\">1</span> of 2" in response.data
+    assert b"Cell" in response.data
+    assert b"Basic unit of life" in response.data
+    assert b"Show answer" in response.data
+
+
+def test_study_mode_hides_other_users_sets():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        other_user = User(username="otheruser", email="other@example.com")
+        other_user.set_password("secure-password")
+        db.session.add_all([user, other_user])
+        db.session.commit()
+
+        study_set = StudySet(
+            title="Chemistry 101",
+            description="Atoms and molecules",
+            owner=other_user,
+            flashcards=[
+                Flashcard(question="Atom", answer="Small unit of matter"),
+            ],
+        )
+        db.session.add(study_set)
+        db.session.commit()
+        study_set_id = study_set.id
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        response = client.get(f"/study-sets/{study_set_id}/study")
+
+    assert response.status_code == 404

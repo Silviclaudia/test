@@ -29,6 +29,9 @@
 <section class="study-set-container">
     <div class="section-heading">
         <h2>Flashcards</h2>
+        {% if study_set.flashcards %}
+            <a href="{{ url_for('main.study_set_study', study_set_id=study_set.id) }}">Study this set</a>
+        {% endif %}
     </div>
 
     {% if study_set.flashcards %}

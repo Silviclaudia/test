@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Study Set</title>
-    <link rel="stylesheet" href="createss.css">
+    <link rel="stylesheet" href="/static/createss.css">
 </head>
 <body>
     <div class = 'container'>
 
-        <button type = 'button' class = 'btn-back'> Back to Dashboard</button>
+        <a href="{{ url_for('main.index') }}">
+            <button type="button" class="btn-back">Back to Dashboard</button>
+        </a>
 
         <header>
             <h1> Create New Study Set</h1>
@@ -29,7 +31,7 @@
 
             <div class = 'card-section ai-bg'>
                 <div class = 'ai-header'>
-                    <span class = 'icon> ✨</span>'
+                    <span class = 'icon'> ✨</span>
                     <h3> AI Flashcard Generator</h3>
                 </div>
                 <textarea name = 'ai-input' placeholder = 'Enter a topic or text and let AI generate flashcards for you!' rows = '4'></textarea>
@@ -54,7 +56,7 @@
                         <input type = 'text' name = 'option3' placeholder = 'Option 3'>
                 </div>
             </div>
-
+            </div>
 
             <div class = 'form-footer'>
                 <button type = 'button' id = 'add-question' class = 'btn-secondary'> + Add Another Question</button>

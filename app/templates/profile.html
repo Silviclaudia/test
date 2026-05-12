@@ -1,55 +1,64 @@
 {% extends "base.html" %}
-
-{% block title %}My Study Sets | Study Dashboard{% endblock %}
-
+{% block title %}Profile | Study Dashboard{% endblock %}
+ 
 {% block content %}
-<section class="profile">
-    <div class="profile-info">
-        <h1>{{ current_user.username }}'s study sets</h1>
-        <p>Review and manage the flashcard sets you have created.</p>
-    </div>
-</section>
-
-<section class="analytics-container" aria-label="Study set summary">
-    <div class="stat-card">
-        <h2>{{ study_sets|length }}</h2>
-        <h3>Study Sets</h3>
-    </div>
-    <div class="stat-card">
-        <h2>{{ total_cards }}</h2>
-        <h3>Cards Created</h3>
-    </div>
-</section>
-
-<section class="study-set-container">
-    <div class="section-heading">
-        <h2>My Study Sets</h2>
-        <a href="{{ url_for('main.create_study_set') }}">Create new set</a>
-    </div>
-
-    {% if study_sets %}
-        {% for study_set in study_sets %}
-            <article class="study-item">
-                <div>
-                    <h3>
-                        <a href="{{ url_for('main.study_set_detail', study_set_id=study_set.id) }}">
-                            {{ study_set.title }}
-                        </a>
-                    </h3>
-                    {% if study_set.description %}
-                        <p>{{ study_set.description }}</p>
-                    {% else %}
-                        <p>No description yet.</p>
-                    {% endif %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profilestyle.css') }}">
+ 
+<div class="profile-wrapper">
+ 
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="avatar">
+            {% if current_user.profile_pic %}
+                <img src="{{ url_for('static', filename='uploads/' + current_user.profile_pic) }}" alt="Profile Picture">
+            {% else %}
+                <div class="avatar-placeholder">
+                    {{ current_user.username[0].upper() }}
                 </div>
-                <span class="card-count">{{ study_set.flashcards|length }} cards</span>
-            </article>
-        {% endfor %}
-    {% else %}
-        <div class="study-item">
-            <h3>No study sets yet</h3>
-            <p>Create your first flashcard set to start studying.</p>
+            {% endif %}
         </div>
-    {% endif %}
-</section>
+        <div class="profile-info">
+            <h1>{{ current_user.username }}</h1>
+            <p class="profile-role">{{ current_user.email }}</p>
+        </div>
+    </div>
+ 
+    <!-- Stats Row -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <h2>{{ total_cards }}</h2>
+            <p>Cards Study</p>
+        </div>
+        <div class="stat-card">
+            <h2>{{ streak }} Days</h2>
+            <p>Study Streak</p>
+        </div>
+        <div class="stat-card">
+            <h2>{{ achievements }}</h2>
+            <p>Achievement</p>
+        </div>
+    </div>
+ 
+    <!-- Study Sets -->
+    <div class="study-sets-section">
+        <h2>My Study Set</h2>
+ 
+        {% if study_sets %}
+            {% for s in study_sets %}
+            <div class="study-item">
+                <div class="study-icon">
+                    <i class="fa-regular fa-rectangle-list"></i>
+                </div>
+                <div class="study-info">
+                    <h3>{{ s.title }}</h3>
+                    <p>{{ s.flashcards|length }} terms</p>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-sets">No study sets yet. <a href="{{ url_for('main.create_study_set') }}">Create one!</a></p>
+        {% endif %}
+    </div>
+ 
+</div>
 {% endblock %}

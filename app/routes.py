@@ -32,21 +32,29 @@ def index():
 
 @main.route("/register", methods=["GET", "POST"])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for("main.index"))
+
     if request.method == "POST":
-        username = request.form.get("name", "").strip()
+        username = request.form.get("username", "").strip()
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
         confirm_password = request.form.get("confirm_password", "")
+        terms = request.form.get("terms")
+
+        if not terms:
+            flash("You must agree to the Terms and Conditions.", "danger")
+            return render_template("register.html"), 400
 
         if password != confirm_password:
-            flash("Passwords do not match.")
+            flash("Passwords do not match.", "danger")
             return render_template("register.html"), 400
 
         existing_user = User.query.filter(
             (User.username == username) | (User.email == email)
         ).first()
         if existing_user:
-            flash("An account with that name or email already exists.")
+            flash("An account with that name or email already exists.", "danger")
             return render_template("register.html"), 400
 
         user = User(username=username, email=email)
@@ -54,11 +62,15 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        flash("Account created. You can now sign in.")
+        login_user(user)
+        flash("Account created! Welcome!", "success")
         return redirect(url_for("main.index"))
 
     return render_template("register.html")
 
+@main.route('/terms')
+def terms():
+    return render_template('terms.html')
 
 @main.route("/login", methods=["GET", "POST"])
 def login():
@@ -75,6 +87,10 @@ def login():
         if user is None or not user.check_password(password):
             flash("Invalid email/username or password.")
             return render_template("login.html"), 400
+
+        user.update_streak()
+        user.update_achievements()
+        db.session.commit()
 
         login_user(user)
         next_page = request.args.get("next")
@@ -140,6 +156,19 @@ def study_sets():
         "profile.html",
         study_sets=user_study_sets,
         total_cards=total_cards,
+    )
+
+
+@main.route("/profile")
+@login_required
+def profile():
+    total_cards = sum(len(s.flashcards) for s in current_user.study_sets)
+    return render_template(
+        "profile.html",
+        total_cards=total_cards,
+        streak=current_user.streak,
+        achievements=current_user.achievements,
+        study_sets=current_user.study_sets,
     )
 
 
@@ -265,8 +294,9 @@ def study_set_study(study_set_id):
     study_set = get_owned_study_set_or_404(study_set_id)
     return render_template("study_mode.html", study_set=study_set)
 
-@main.route('/analytics')
 
+@main.route("/analytics")
+@login_required
 def analytics():
     user_study_sets = (
         StudySet.query.filter_by(user_id=current_user.id)

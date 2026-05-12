@@ -1,93 +1,132 @@
-:root {
-    --primary-purple: #6c5ce7;
-    --light-purple: #f3f0ff;
-    --text-main: #2f3640;
-    --bg-main: #f5f6fa;
+/* Profile Wrapper */
+.profile-wrapper {
+    padding: 2rem;
+    max-width: 800px;
 }
 
-* {
-    margin:0;
-    padding:0;
-    box-sizing: border-box; /*reduce break in display*/
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    padding: 40px;
-    display: flex;
-    justify-content: flex-start;
-}
-
-/* Set Page Width */
-.dashboard-container {
-    width: 100%,
-    max-width: 900px;
-}
-
-.profile {
+/* Profile Header */
+.profile-header {
     display: flex;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 35px;
-    border-radius: 12px;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-.profile img {
-    width: 110px;
-    height:110px;
+.avatar img {
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--primary-purple);
 }
 
-.profile h2, .stat-card h2, .study-set-container h2, .study-item h2{
-    font-size: 1.5rem;
-    color: var(--primary-purple);
-    margin-bottom: 5px;
+.avatar-placeholder {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #888;
 }
 
-.analytics-container {
-    display: grid;
-    /* Fraction of 1 column to split into 3 columns*/
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 40px;
+.profile-info h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 0.25rem;
 }
 
-/*Select all childs from <div>*/
-.analytics-container > div {
-    background: white;
+.profile-role {
+    color: #7c6fcd;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Stats Row */
+.stats-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    flex: 1;
+    background: linear-gradient(135deg, #c5b8f8, #a78ef0);
+    border-radius: 14px;
+    padding: 1.25rem 1rem;
     text-align: center;
-    padding: 25px;
+    color: #fff;
+}
+
+.stat-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+    color: #fff;
+}
+
+.stat-card p {
+    font-size: 0.82rem;
+    color: #e8e0ff;
+    margin: 0;
+}
+
+/* Study Sets */
+.study-sets-section h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 1rem;
+}
+
+.study-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: linear-gradient(135deg, #ddd6fe, #c4b5fd);
     border-radius: 12px;
-    border: 2px solid var(--primary-purple);
-}
-
-.stat-card h3, .study-item h3 {
-    font-size: 1rem;
-    color: var(--primary-purple);
-    margin-bottom: 5px;
-}
-
-.study-item{
-    margin-top: 20px;
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    border: 2px solid var(--primary-purple);
-}
-
-/*Moves to top slowly when mouse is in the element*/
-.stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(108, 92, 231, 0.15);
-    background-color: var(--light-purple);
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.75rem;
+    transition: transform 0.15s;
 }
 
 .study-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(108, 92, 231, 0.15);
-    background-color: var(--light-purple);
+    transform: translateY(-2px);
+}
+
+.study-icon {
+    font-size: 1.5rem;
+    color: #6c63ff;
+    flex-shrink: 0;
+}
+
+.study-info h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin: 0 0 0.2rem;
+}
+
+.study-info p {
+    font-size: 0.82rem;
+    color: #6c63ff;
+    margin: 0;
+}
+
+.no-sets {
+    color: #888;
+    font-size: 0.95rem;
+}
+
+.no-sets a {
+    color: #6c63ff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.no-sets a:hover {
+    text-decoration: underline;
 }

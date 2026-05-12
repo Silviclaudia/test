@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -14,6 +15,9 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    streak = db.Column(db.Integer, default=0)         
+    achievements = db.Column(db.Integer, default=0) 
+    last_active = db.Column(db.DateTime, nullable=True) 
     study_sets = db.relationship("StudySet", back_populates="owner", lazy=True)
 
     def set_password(self, password):
@@ -22,6 +26,33 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def update_streak(self):
+            today = datetime.now(timezone.utc).date()
+            if self.last_active:
+                diff = today - self.last_active.date()
+                if diff.days == 1:
+                    self.streak += 1       # consecutive day
+                elif diff.days > 1:
+                    self.streak = 1        # missed a day, reset
+            else:
+                self.streak = 1            # first login ever
+            self.last_active = datetime.now(timezone.utc)
+
+    def update_achievements(self):
+        count = 0
+        # 1 achievement for first study set
+        if len(self.study_sets) >= 1:
+            count += 1
+        # 1 achievement for 5 study sets
+        if len(self.study_sets) >= 5:
+            count += 1
+        # 1 achievement for 7 day streak
+        if self.streak >= 7:
+            count += 1
+        # 1 achievement for 10 study sets
+        if len(self.study_sets) >= 10:
+            count += 1
+        self.achievements = count
 
 class StudySet(db.Model):
     id = db.Column(db.Integer, primary_key=True)

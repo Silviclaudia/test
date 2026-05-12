@@ -546,6 +546,157 @@ def test_study_mode_hides_other_users_sets():
     assert response.status_code == 404
 
 
+def test_edit_study_set_requires_login():
+    app = create_app(TestConfig)
+
+    with app.test_client() as client:
+        response = client.get("/study-sets/1/edit")
+
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_edit_study_set_updates_metadata_and_flashcards():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        db.session.add(user)
+        db.session.commit()
+
+        study_set = StudySet(
+            title="Original Title",
+            description="Original description",
+            is_public=True,
+            owner=user,
+            flashcards=[
+                Flashcard(question="Old term 1", answer="Old definition 1"),
+                Flashcard(question="Old term 2", answer="Old definition 2"),
+            ],
+        )
+        db.session.add(study_set)
+        db.session.commit()
+        study_set_id = study_set.id
+        flashcard_one_id = study_set.flashcards[0].id
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        response = client.post(
+            f"/study-sets/{study_set_id}/edit",
+            data={
+                "title": "Updated Title",
+                "description": "Updated description",
+                "flashcard_id": [str(flashcard_one_id), ""],
+                "term": ["Updated term 1", "New term 3"],
+                "definition": ["Updated definition 1", "New definition 3"],
+            },
+        )
+
+    assert response.status_code == 302
+    assert response.headers["Location"].endswith(f"/study-sets/{study_set_id}")
+
+    with app.app_context():
+        updated_set = db.session.get(StudySet, study_set_id)
+        assert updated_set is not None
+        assert updated_set.title == "Updated Title"
+        assert updated_set.description == "Updated description"
+        assert updated_set.is_public is False
+
+        flashcards = Flashcard.query.filter_by(study_set_id=study_set_id).order_by(Flashcard.id).all()
+        assert len(flashcards) == 2
+        assert flashcards[0].question == "Updated term 1"
+        assert flashcards[0].answer == "Updated definition 1"
+        assert flashcards[1].question == "New term 3"
+        assert flashcards[1].answer == "New definition 3"
+
+
+def test_delete_study_set_removes_flashcards():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        db.session.add(user)
+        db.session.commit()
+
+        study_set = StudySet(
+            title="Delete me",
+            description="To be removed",
+            owner=user,
+            flashcards=[
+                Flashcard(question="Term A", answer="Definition A"),
+                Flashcard(question="Term B", answer="Definition B"),
+            ],
+        )
+        db.session.add(study_set)
+        db.session.commit()
+        study_set_id = study_set.id
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        response = client.post(f"/study-sets/{study_set_id}/delete")
+
+    assert response.status_code == 302
+    assert response.headers["Location"].endswith("/study-sets")
+
+    with app.app_context():
+        assert db.session.get(StudySet, study_set_id) is None
+        remaining_flashcards = Flashcard.query.filter_by(study_set_id=study_set_id).all()
+        assert remaining_flashcards == []
+
+
+def test_edit_delete_hide_other_users_study_sets():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        db.create_all()
+        user = User(username="studyuser", email="study@example.com")
+        user.set_password("secure-password")
+        other_user = User(username="otheruser", email="other@example.com")
+        other_user.set_password("secure-password")
+        db.session.add_all([user, other_user])
+        db.session.commit()
+
+        other_set = StudySet(
+            title="Other set",
+            description="Owned by someone else",
+            owner=other_user,
+            flashcards=[Flashcard(question="Term", answer="Definition")],
+        )
+        db.session.add(other_set)
+        db.session.commit()
+        other_set_id = other_set.id
+
+    with app.test_client() as client:
+        client.post(
+            "/login",
+            data={
+                "email": "study@example.com",
+                "password": "secure-password",
+            },
+        )
+        edit_response = client.get(f"/study-sets/{other_set_id}/edit")
+        delete_response = client.post(f"/study-sets/{other_set_id}/delete")
+
+    assert edit_response.status_code == 404
+    assert delete_response.status_code == 404
+
+
 def test_analytics_shows_real_user_stats():
     app = create_app(TestConfig)
 

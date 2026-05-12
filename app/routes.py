@@ -8,6 +8,16 @@ from app.models import Flashcard, StudySet, User
 main = Blueprint("main", __name__)
 
 
+def get_owned_study_set_or_404(study_set_id):
+    study_set = StudySet.query.filter_by(
+        id=study_set_id,
+        user_id=current_user.id,
+    ).first()
+    if study_set is None:
+        abort(404)
+    return study_set
+
+
 @main.route("/")
 def index():
     recent_public_sets = (
@@ -135,26 +145,90 @@ def study_sets():
 @main.route("/study-sets/<int:study_set_id>")
 @login_required
 def study_set_detail(study_set_id):
-    study_set = StudySet.query.filter_by(
-        id=study_set_id,
-        user_id=current_user.id,
-    ).first()
-    if study_set is None:
-        abort(404)
-
+    study_set = get_owned_study_set_or_404(study_set_id)
     return render_template("study_set.html", study_set=study_set)
+
+
+@main.route("/study-sets/<int:study_set_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_study_set(study_set_id):
+    study_set = get_owned_study_set_or_404(study_set_id)
+
+    if request.method == "POST":
+        title = request.form.get("title", "").strip()
+        description = request.form.get("description", "").strip()
+        is_public = request.form.get("is_public") == "on"
+
+        flashcard_ids = request.form.getlist("flashcard_id")
+        terms = request.form.getlist("term")
+        definitions = request.form.getlist("definition")
+
+        flashcard_rows = []
+        for flashcard_id, term, definition in zip(flashcard_ids, terms, definitions):
+            clean_term = term.strip()
+            clean_definition = definition.strip()
+
+            if not clean_term and not clean_definition:
+                continue
+            if not clean_term or not clean_definition:
+                flash("Each flashcard must include both term and definition.")
+                return render_template("edit_studyset.html", study_set=study_set), 400
+
+            flashcard_rows.append((flashcard_id, clean_term, clean_definition))
+
+        if not title:
+            flash("Set title is required.")
+            return render_template("edit_studyset.html", study_set=study_set), 400
+
+        if not flashcard_rows:
+            flash("Add at least one complete flashcard.")
+            return render_template("edit_studyset.html", study_set=study_set), 400
+
+        existing_flashcards = {str(card.id): card for card in study_set.flashcards}
+        kept_flashcard_ids = set()
+
+        for flashcard_id, term, definition in flashcard_rows:
+            if flashcard_id:
+                existing_flashcard = existing_flashcards.get(flashcard_id)
+                if existing_flashcard is None:
+                    continue
+                existing_flashcard.question = term
+                existing_flashcard.answer = definition
+                kept_flashcard_ids.add(flashcard_id)
+            else:
+                db.session.add(
+                    Flashcard(question=term, answer=definition, study_set=study_set)
+                )
+
+        for card_id, card in existing_flashcards.items():
+            if card_id not in kept_flashcard_ids:
+                db.session.delete(card)
+
+        study_set.title = title
+        study_set.description = description
+        study_set.is_public = is_public
+        db.session.commit()
+
+        flash("Study set updated.")
+        return redirect(url_for("main.study_set_detail", study_set_id=study_set.id))
+
+    return render_template("edit_studyset.html", study_set=study_set)
+
+
+@main.route("/study-sets/<int:study_set_id>/delete", methods=["POST"])
+@login_required
+def delete_study_set(study_set_id):
+    study_set = get_owned_study_set_or_404(study_set_id)
+    db.session.delete(study_set)
+    db.session.commit()
+    flash("Study set deleted.")
+    return redirect(url_for("main.study_sets"))
 
 
 @main.route("/study-sets/<int:study_set_id>/study")
 @login_required
 def study_set_study(study_set_id):
-    study_set = StudySet.query.filter_by(
-        id=study_set_id,
-        user_id=current_user.id,
-    ).first()
-    if study_set is None:
-        abort(404)
-
+    study_set = get_owned_study_set_or_404(study_set_id)
     return render_template("study_mode.html", study_set=study_set)
 
 @main.route('/analytics')

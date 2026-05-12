@@ -1,5 +1,6 @@
 from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
+from sqlalchemy import or_
 
 from app import db
 from app.models import Flashcard, StudySet, User
@@ -142,6 +143,30 @@ def study_sets():
     )
 
 
+@main.route("/search")
+@login_required
+def search_public_sets():
+    query_text = request.args.get("q", "").strip()
+    owner_text = request.args.get("owner", "").strip()
+
+    search_query = StudySet.query.join(User).filter(StudySet.is_public.is_(True))
+    if query_text:
+        pattern = f"%{query_text}%"
+        search_query = search_query.filter(
+            or_(StudySet.title.ilike(pattern), StudySet.description.ilike(pattern))
+        )
+    if owner_text:
+        search_query = search_query.filter(User.username.ilike(f"%{owner_text}%"))
+
+    results = search_query.order_by(StudySet.id.desc()).limit(30).all()
+    return render_template(
+        "search.html",
+        results=results,
+        query_text=query_text,
+        owner_text=owner_text,
+    )
+
+
 @main.route("/study-sets/<int:study_set_id>")
 @login_required
 def study_set_detail(study_set_id):
@@ -223,6 +248,15 @@ def delete_study_set(study_set_id):
     db.session.commit()
     flash("Study set deleted.")
     return redirect(url_for("main.study_sets"))
+
+
+@main.route("/browse/study-sets/<int:study_set_id>")
+@login_required
+def browse_public_study_set(study_set_id):
+    study_set = StudySet.query.filter_by(id=study_set_id, is_public=True).first()
+    if study_set is None:
+        abort(404)
+    return render_template("browse_study_set.html", study_set=study_set)
 
 
 @main.route("/study-sets/<int:study_set_id>/study")

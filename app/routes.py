@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import current_user, login_required
 from app.models import User
 from app import db
@@ -42,3 +42,12 @@ def analytics():
     }
 
     return render_template('analytics.html', **stats)
+
+@main.route('/register')
+def register():
+    return render_template('register.html')
+
+@main.route('/create')
+@login_required
+def create_studyset():
+    return render_template('create_studyset.html')

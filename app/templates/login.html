@@ -8,7 +8,7 @@
   <title>Login</title>
 
   <!-- External CSS file -->
-  <link rel="stylesheet" href="../static/css/login.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 
   <!-- Font Awesome Icons -->
   <link 
@@ -30,6 +30,16 @@
       <div class="login-form">
 
         <h1>Welcome Back</h1>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="form-errors" role="alert">
+              {% for message in messages %}
+                <p>{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
 
         <div class="social-login">
 
@@ -61,7 +71,7 @@
           <div></div>
         </div>
 
-        <form method="POST" action="{{ url_for('main.login') }}">
+        <form method="post">
 
           <div class="input-group">
             <label for="email">Email</label>
@@ -70,6 +80,7 @@
               id="email" 
               name="email" 
               placeholder="Enter your email or username"
+              required
             >
           </div>
 
@@ -85,6 +96,7 @@
               id="password" 
               name="password" 
               placeholder="Enter your password"
+              required
             >
 
           </div>
@@ -96,7 +108,7 @@
         <div class="sign-up">
           <p>
             Don't have an account?
-            <a href="register.html">Sign up</a>
+            <a href="{{ url_for('main.register') }}">Sign up</a>
           </p>
         </div>
 

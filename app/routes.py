@@ -1,5 +1,5 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, login_user, logout_user
 
 from app import db
 from app.models import User
@@ -41,6 +41,39 @@ def register():
         return redirect(url_for("main.index"))
 
     return render_template("register.html")
+
+
+@main.route("/login", methods=["GET", "POST"])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("main.index"))
+
+    if request.method == "POST":
+        login_identifier = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
+        user = User.query.filter(
+            (User.email == login_identifier) | (User.username == login_identifier)
+        ).first()
+
+        if user is None or not user.check_password(password):
+            flash("Invalid email/username or password.")
+            return render_template("login.html"), 400
+
+        login_user(user)
+        next_page = request.args.get("next")
+        if next_page and next_page.startswith("/"):
+            return redirect(next_page)
+        return redirect(url_for("main.index"))
+
+    return render_template("login.html")
+
+
+@main.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("You have been signed out.")
+    return redirect(url_for("main.index"))
 
 @main.route('/analytics')
 

@@ -30,7 +30,12 @@ class StudySet(db.Model):
     is_public = db.Column(db.Boolean, default=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     owner = db.relationship("User", back_populates="study_sets")
-    flashcards = db.relationship("Flashcard", back_populates="study_set", lazy=True)
+    flashcards = db.relationship(
+        "Flashcard",
+        back_populates="study_set",
+        lazy=True,
+        cascade="all, delete-orphan",
+    )
 
 
 class Flashcard(db.Model):

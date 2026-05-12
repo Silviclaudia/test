@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}{{ study_set.title }} | Study Dashboard{% endblock %}
+
+{% block content %}
+<section class="profile">
+    <div class="profile-info">
+        <a class="back-link" href="{{ url_for('main.study_sets') }}">Back to my study sets</a>
+        <h1>{{ study_set.title }}</h1>
+        {% if study_set.description %}
+            <p>{{ study_set.description }}</p>
+        {% else %}
+            <p>No description yet.</p>
+        {% endif %}
+    </div>
+</section>
+
+<section class="analytics-container" aria-label="Study set summary">
+    <div class="stat-card">
+        <h2>{{ study_set.flashcards|length }}</h2>
+        <h3>Cards</h3>
+    </div>
+    <div class="stat-card">
+        <h2>{% if study_set.is_public %}Public{% else %}Private{% endif %}</h2>
+        <h3>Visibility</h3>
+    </div>
+</section>
+
+<section class="study-set-container">
+    <div class="section-heading">
+        <h2>Flashcards</h2>
+        <div class="inline-actions">
+            <a href="{{ url_for('main.edit_study_set', study_set_id=study_set.id) }}">Edit set</a>
+            {% if study_set.flashcards %}
+                <a href="{{ url_for('main.study_set_study', study_set_id=study_set.id) }}">Study this set</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <form action="{{ url_for('main.delete_study_set', study_set_id=study_set.id) }}" method="post" class="inline-delete-form">
+        <button type="submit" class="button button-danger">Delete set</button>
+    </form>
+
+    {% if study_set.flashcards %}
+        {% for flashcard in study_set.flashcards %}
+            <article class="flashcard-row">
+                <div>
+                    <span class="flashcard-label">Term</span>
+                    <h3>{{ flashcard.question }}</h3>
+                </div>
+                <div>
+                    <span class="flashcard-label">Definition</span>
+                    <p>{{ flashcard.answer }}</p>
+                </div>
+            </article>
+        {% endfor %}
+    {% else %}
+        <div class="study-item">
+            <h3>No flashcards yet</h3>
+            <p>Add cards to start studying this set.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

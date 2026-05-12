@@ -50,30 +50,27 @@
 <section class="recent-sets" aria-labelledby="recent-set-heading">
     <div class="section-heading">
         <h2 id="recent-set-heading">Recent public study sets</h2>
-        <a href="#">View all <i class="fa-solid fa-arrow-right"></i></a>
     </div>
     <div class="set-list">
-        <article class="set-row">
-            <i class="fa-regular fa-bookmark"></i>
-            <h3>Spanish Vocabulary - Unit 3</h3>
-            <p>128 cards</p>
-            <p>by maria_12</p>
-            <p>2.1k <i class="fa-regular fa-eye"></i></p>
-        </article>
-        <article class="set-row">
-            <i class="fa-regular fa-bookmark"></i>
-            <h3>Math Basics</h3>
-            <p>64 cards</p>
-            <p>by studybuddy</p>
-            <p>1.4k <i class="fa-regular fa-eye"></i></p>
-        </article>
-        <article class="set-row">
-            <i class="fa-regular fa-bookmark"></i>
-            <h3>Chemistry Elements</h3>
-            <p>118 cards</p>
-            <p>by chem_ninja</p>
-            <p>980 <i class="fa-regular fa-eye"></i></p>
-        </article>
+        {% if recent_public_sets %}
+            {% for study_set in recent_public_sets %}
+                <article class="set-row">
+                    <i class="fa-regular fa-bookmark"></i>
+                    <h3>{{ study_set.title }}</h3>
+                    <p>{{ study_set.flashcards|length }} cards</p>
+                    <p>by {{ study_set.owner.username }}</p>
+                    <p>Public</p>
+                </article>
+            {% endfor %}
+        {% else %}
+            <article class="set-row">
+                <i class="fa-regular fa-bookmark"></i>
+                <h3>No public study sets yet</h3>
+                <p>0 cards</p>
+                <p>Be the first to share one</p>
+                <p>-</p>
+            </article>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

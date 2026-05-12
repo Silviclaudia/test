@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Study Set | Study Dashboard{% endblock %}
+
+{% block content %}
+<section class="profile">
+    <div class="profile-info">
+        <a href="{{ url_for('main.study_set_detail', study_set_id=study_set.id) }}" class="back-link">Back to study set</a>
+        <h1>Edit {{ study_set.title }}</h1>
+        <p>Update details, visibility, and flashcards for this study set.</p>
+    </div>
+</section>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="form-errors" role="alert">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<section class="create-set-wrapper">
+    <form action="{{ url_for('main.edit_study_set', study_set_id=study_set.id) }}" method="post">
+        <div class="card-section">
+            <label for="title">Set Title</label>
+            <input type="text" id="title" name="title" value="{{ study_set.title }}" required>
+
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="3">{{ study_set.description or '' }}</textarea>
+
+            <label class="checkbox-row" for="is_public">
+                <input type="checkbox" id="is_public" name="is_public" {% if study_set.is_public %}checked{% endif %}>
+                <span>Make this set public</span>
+            </label>
+        </div>
+
+        <div id="flashcards-list">
+            {% for flashcard in study_set.flashcards %}
+                <div class="card-section question-block">
+                    <div class="inline-actions">
+                        <h3>Flashcard {{ loop.index }}</h3>
+                        <button type="button" class="button button-secondary remove-card">Remove</button>
+                    </div>
+                    <input type="hidden" name="flashcard_id" value="{{ flashcard.id }}">
+
+                    <label for="term-{{ loop.index }}">Term</label>
+                    <input type="text" id="term-{{ loop.index }}" name="term" value="{{ flashcard.question }}" required>
+
+                    <label for="definition-{{ loop.index }}">Definition</label>
+                    <input type="text" id="definition-{{ loop.index }}" name="definition" value="{{ flashcard.answer }}" required>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-footer">
+            <button type="button" id="add-flashcard" class="button button-secondary">+ Add Flashcard</button>
+            <button type="submit" class="button">Save Changes</button>
+        </div>
+    </form>
+</section>
+
+<script>
+    const flashcardsList = document.querySelector("#flashcards-list");
+    const addFlashcardButton = document.querySelector("#add-flashcard");
+
+    function updateLabels() {
+        const cards = flashcardsList.querySelectorAll(".question-block");
+        cards.forEach((card, index) => {
+            const number = index + 1;
+            card.querySelector("h3").textContent = `Flashcard ${number}`;
+            const termInput = card.querySelector("input[name='term']");
+            const definitionInput = card.querySelector("input[name='definition']");
+            const termId = `term-${number}`;
+            const definitionId = `definition-${number}`;
+            termInput.id = termId;
+            definitionInput.id = definitionId;
+            card.querySelector("label[for^='term-']").setAttribute("for", termId);
+            card.querySelector("label[for^='definition-']").setAttribute("for", definitionId);
+        });
+    }
+
+    function buildFlashcardRow() {
+        const card = document.createElement("div");
+        card.className = "card-section question-block";
+        card.innerHTML = `
+            <div class="inline-actions">
+                <h3>Flashcard</h3>
+                <button type="button" class="button button-secondary remove-card">Remove</button>
+            </div>
+            <input type="hidden" name="flashcard_id" value="">
+
+            <label for="term-new">Term</label>
+            <input type="text" id="term-new" name="term" required>
+
+            <label for="definition-new">Definition</label>
+            <input type="text" id="definition-new" name="definition" required>
+        `;
+        return card;
+    }
+
+    addFlashcardButton.addEventListener("click", () => {
+        flashcardsList.appendChild(buildFlashcardRow());
+        updateLabels();
+    });
+
+    flashcardsList.addEventListener("click", (event) => {
+        if (!event.target.classList.contains("remove-card")) {
+            return;
+        }
+        event.target.closest(".question-block").remove();
+        updateLabels();
+    });
+
+    updateLabels();
+</script>
+{% endblock %}

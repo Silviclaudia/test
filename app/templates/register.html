@@ -36,7 +36,7 @@
         <div class="terms-group">
             <input type="checkbox" id="terms" name="terms" required>
             <label for="terms">I agree to the
-            <a href="terms.html" class="text-purple-600 font-medium">Terms and Conditions</a></label>
+            <a href="{{ url_for('main.terms') }}">Terms and Conditions</a>
         </div>
 
         <button type="submit" class="submit-btn">Create Account</button>

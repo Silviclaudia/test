@@ -42,7 +42,6 @@ def register():
         confirm_password = request.form.get("confirm_password", "")
         terms = request.form.get("terms")
 
-        # ← your terms check
         if not terms:
             flash("You must agree to the Terms and Conditions.", "danger")
             return render_template("register.html"), 400
@@ -69,6 +68,9 @@ def register():
 
     return render_template("register.html")
 
+@main.route('/terms')
+def terms():
+    return render_template('terms.html')
 
 @main.route("/login", methods=["GET", "POST"])
 def login():
@@ -86,7 +88,6 @@ def login():
             flash("Invalid email/username or password.")
             return render_template("login.html"), 400
 
-        # ← your streak and achievements
         user.update_streak()
         user.update_achievements()
         db.session.commit()

@@ -12,6 +12,7 @@
             <a class="brand" href="{{ url_for('main.index') }}">Study Dashboard</a>
             <nav class="auth-actions" aria-label="Authentication">
                 {% if current_user.is_authenticated %}
+                    <span>Welcome, {{ current_user.username }}!</span>
                     <a class="button button-secondary" href="{{ url_for('main.logout') }}">Log Out</a>
                 {% else %}
                     <a class="button button-secondary" href="{{ url_for('main.login') }}">Sign In</a>
@@ -22,37 +23,52 @@
 
         <div class="page-layout">
             <aside class="left-sidebar" aria-label="Primary navigation">
-                <a class="nav-item {% if request.endpoint == 'main.index' %}active{% endif %}" href="{{ url_for('main.index') }}">
+                <a class="nav-item {% if request.endpoint == 'main.index' %}active{% endif %}" 
+                   href="{{ url_for('main.index') }}">
                     <i class="fa-solid fa-house"></i>
                     <span>Dashboard</span>
                 </a>
-                <a class="nav-item {% if request.endpoint in ['main.study_sets', 'main.study_set_detail', 'main.study_set_study', 'main.edit_study_set'] %}active{% endif %}" href="{{ url_for('main.study_sets') }}">
-                    <i class="fa-solid fa-book"></i>
-                    <span>My Study Sets</span>
-                </a>
-                <a class="nav-item {% if request.endpoint in ['main.search_public_sets', 'main.browse_public_study_set'] %}active{% endif %}" href="{{ url_for('main.search_public_sets') }}">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <span>Search</span>
-                </a>
-                <a class="nav-item {% if request.endpoint == 'main.create_study_set' %}active{% endif %}" href="{{ url_for('main.create_study_set') }}">
-                    <i class="fa-solid fa-plus"></i>
-                    <span>Create New Set</span>
-                </a>
-                <a class="nav-item {% if request.endpoint == 'main.analytics' %}active{% endif %}" href="{{ url_for('main.analytics') }}">
-                    <i class="fa-solid fa-chart-bar"></i>
-                    <span>Analytics</span>
-                </a>
-                <span class="nav-item nav-item-disabled" aria-disabled="true">
-                    <i class="fa-solid fa-gear"></i>
-                    <span>Settings</span>
-                </span>
-                <a class="nav-item {% if request.endpoint == 'main.profile' %}active{% endif %}" href="{{ url_for('main.profile') }}">
-                    <i class="fa-solid fa-user"></i>
-                    <span>Profile</span>
-                </a>
+                {% if current_user.is_authenticated %}
+                    <a class="nav-item {% if request.endpoint in ['main.study_sets', 'main.study_set_detail', 'main.study_set_study', 'main.edit_study_set'] %}active{% endif %}" 
+                       href="{{ url_for('main.study_sets') }}">
+                        <i class="fa-solid fa-book"></i>
+                        <span>My Study Sets</span>
+                    </a>
+                    <a class="nav-item {% if request.endpoint in ['main.search_public_sets', 'main.browse_public_study_set'] %}active{% endif %}" 
+                       href="{{ url_for('main.search_public_sets') }}">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>Search</span>
+                    </a>
+                    <a class="nav-item {% if request.endpoint == 'main.create_study_set' %}active{% endif %}" 
+                       href="{{ url_for('main.create_study_set') }}">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Create New Set</span>
+                    </a>
+                    <a class="nav-item {% if request.endpoint == 'main.analytics' %}active{% endif %}" 
+                       href="{{ url_for('main.analytics') }}">
+                        <i class="fa-solid fa-chart-bar"></i>
+                        <span>Analytics</span>
+                    </a>
+                    <span class="nav-item nav-item-disabled" aria-disabled="true">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Settings</span>
+                    </span>
+                    <a class="nav-item {% if request.endpoint == 'main.profile' %}active{% endif %}" 
+                       href="{{ url_for('main.profile') }}">
+                        <i class="fa-solid fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                {% endif %}
             </aside>
 
             <main class="main-content">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
                 {% block content %}{% endblock %}
             </main>
         </div>

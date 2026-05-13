@@ -34,12 +34,20 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
+In Windows:
+# Create venv
+python -m venv venv
+
+# Activate (Windows)
+.\venv\Scripts\activate
+
 Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 
-pip install flask flask-sqlalchemy flask-login
+```
+
 ```
 
 Start the Flask development server:

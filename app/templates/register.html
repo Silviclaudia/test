@@ -21,8 +21,8 @@
 
     <!-- User form through URL and update data in database-->
     <form method="POST" action="{{ url_for('main.register') }}">
-        <label for="username">Full Name</label>
-        <input type="text" id="username" name="username" required>
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required>
 
         <label for="email">Email Address</label>
         <input type="email" id="email" name="email" required>
@@ -37,6 +37,7 @@
             <input type="checkbox" id="terms" name="terms" required>
             <label for="terms">I agree to the
             <a href="{{ url_for('main.terms') }}">Terms and Conditions</a>
+            </label>
         </div>
 
         <button type="submit" class="submit-btn">Create Account</button>

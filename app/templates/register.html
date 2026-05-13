@@ -20,7 +20,7 @@
     {% endwith %}
 
     <!-- User form through URL and update data in database-->
-    <form method="POST" action = "{{ url_for('main.register') }}">
+    <form method="POST" action = "{{ url_for('main.register') }}"> 
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         </form>
         <label for="username">Full Name</label>

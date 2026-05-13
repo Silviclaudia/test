@@ -38,6 +38,8 @@
     </div>
 
     <form action="{{ url_for('main.delete_study_set', study_set_id=study_set.id) }}" method="post" class="inline-delete-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    
         <button type="submit" class="button button-danger">Delete set</button>
     </form>
 

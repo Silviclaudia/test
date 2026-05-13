@@ -23,6 +23,13 @@
 
 <section class="create-set-wrapper">
     <form action="{{ url_for('main.edit_study_set', study_set_id=study_set.id) }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="card-section">
+            <label for="title">Set Title</label>
+            <input type="text" id="title" name="title" value="{{ study_set.title }}" required>
+            </div>
+    </form>
         <div class="card-section">
             <label for="title">Set Title</label>
             <input type="text" id="title" name="title" value="{{ study_set.title }}" required>

@@ -36,7 +36,7 @@ def register():
         return redirect(url_for("main.index"))
 
     if request.method == "POST":
-        username = request.form.get("username", "").strip()
+        username = request.form.get("name", "").strip()
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
         confirm_password = request.form.get("confirm_password", "")
@@ -87,7 +87,6 @@ def login():
         if user is None or not user.check_password(password):
             flash("Invalid email/username or password.")
             return render_template("login.html"), 400
-
         user.update_streak()
         user.update_achievements()
         db.session.commit()

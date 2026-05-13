@@ -48,18 +48,6 @@ pip install -r requirements.txt
 
 ```
 
-Create the database:
-
-```bash
-python -m flask shell
-```
-Then type:
-```python
-from app import db
-db.create_all()
-exit()
-```
-
 ```
 
 Start the Flask development server:
@@ -74,14 +62,4 @@ Open <http://127.0.0.1:5000> in your browser.
 
 ```bash
 pytest
-```
-
-# Common Issues
-`no such table` error
-Database tables haven't been created yet. Run:
-```bash
-python -m flask shell
->>> from app import db
->>> db.create_all()
->>> exit()
 ```

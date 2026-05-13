@@ -23,7 +23,7 @@ def create_app(config_class=Config):
     csrf.init_app(app)
     login_manager.init_app(app)
 
-    from app import models  
+    from app import models
     from app.routes import main
     app.register_blueprint(main)
 

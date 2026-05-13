@@ -36,7 +36,7 @@ def register():
         return redirect(url_for("main.index"))
 
     if request.method == "POST":
-        username = request.form.get("username", "").strip()
+        username = request.form.get("name", "").strip()
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
         confirm_password = request.form.get("confirm_password", "")
@@ -156,6 +156,8 @@ def study_sets():
         "profile.html",
         study_sets=user_study_sets,
         total_cards=total_cards,
+        streak=current_user.streak,        
+        achievements=current_user.achievements,  
     )
 
 

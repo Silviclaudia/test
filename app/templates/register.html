@@ -10,7 +10,6 @@
     <h4>Start your learning with us</h4>
     </div>
 
-    <!-- Gets messages from Python and receives success or fail message -->
     {% with messages= get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -19,7 +18,7 @@
         {% endif %}
     {% endwith %}
 
-    <!-- User form through URL and update data in database-->
+    
     <form method="POST" action = "{{ url_for('main.register') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         </form>
@@ -62,6 +61,7 @@
             <input type="checkbox" id="terms" name="terms" required>
             <label for="terms">I agree to the
             <a href="{{ url_for('main.terms') }}">Terms and Conditions</a>
+            </label>
         </div>
 
         <button type="submit" class="submit-btn">Create Account</button>

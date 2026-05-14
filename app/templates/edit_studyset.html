@@ -23,6 +23,9 @@
 
 <section class="create-set-wrapper">
     <form action="{{ url_for('main.edit_study_set', study_set_id=study_set.id) }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <!-- Combined Card Section: Removed the first duplicate title block -->
         <div class="card-section">
             <label for="title">Set Title</label>
             <input type="text" id="title" name="title" value="{{ study_set.title }}" required>
@@ -58,11 +61,11 @@
             <button type="button" id="add-flashcard" class="button button-secondary">+ Add Flashcard</button>
             <button type="submit" class="button">Save Changes</button>
         </div>
-    </form>
+    </form> <!-- The form now correctly wraps all content -->
 </section>
 
 <script>
-    const flashcardsList = document.querySelector("#flashcards-list");
+    const flashcardsList = document.querySelector("#questions-list") || document.querySelector("#flashcards-list");
     const addFlashcardButton = document.querySelector("#add-flashcard");
 
     function updateLabels() {

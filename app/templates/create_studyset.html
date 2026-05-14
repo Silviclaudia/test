@@ -22,7 +22,9 @@
 {% endwith %}
 
 <section class="create-set-wrapper">
-    <form action="{{ url_for('main.create_study_set') }}" method="post">
+    <form method="POST" action="{{ url_for('main.create_study_set') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
         <div class="card-section">
             <label for="title">Set Title</label>
             <input type="text" id="title" name="title" placeholder="e.g. Biology 101" required>
@@ -64,7 +66,7 @@
             <button type="button" id="add-question" class="button button-secondary">+ Add Another Question</button>
             <button type="submit" class="button">Create Study Set</button>
         </div>
-    </form>
+    </form> <!-- Corrected: Closing tag moved here to wrap all inputs -->
 </section>
 
 <script>

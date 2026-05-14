@@ -71,7 +71,9 @@
           <div></div>
         </div>
 
-        <form method="post">
+        <form method="POST" action="{{ url_for('main.login') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          </form>
 
           <div class="input-group">
             <label for="email">Email</label>

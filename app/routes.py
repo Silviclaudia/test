@@ -80,22 +80,25 @@ def login():
     if request.method == "POST":
         login_identifier = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
+
         user = User.query.filter(
             (User.email == login_identifier) | (User.username == login_identifier)
         ).first()
 
         if user is None or not user.check_password(password):
-            flash("Invalid email/username or password.")
-            return render_template("login.html"), 400
+            flash("Invalid email/username or password.", "danger")
+            return render_template("login.html", email=login_identifier), 400
 
         user.update_streak()
         user.update_achievements()
         db.session.commit()
 
         login_user(user)
+
         next_page = request.args.get("next")
         if next_page and next_page.startswith("/"):
             return redirect(next_page)
+
         return redirect(url_for("main.index"))
 
     return render_template("login.html")
@@ -108,6 +111,27 @@ def logout():
     flash("You have been signed out.")
     return redirect(url_for("main.index"))
 
+
+@main.route("/setting", methods=["GET", "POST"])
+@main.route("/settings", methods=["GET", "POST"])
+@login_required
+def settings():
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        email = request.form.get("email", "").strip().lower()
+
+        if not username or not email:
+            flash("Username and email are required.", "danger")
+            return render_template("setting.html"), 400
+
+        current_user.username = username
+        current_user.email = email
+
+        db.session.commit()
+        flash("Settings updated successfully.", "success")
+        return redirect(url_for("main.settings"))
+
+    return render_template("setting.html")
 
 @main.route("/study-sets/new", methods=["GET", "POST"])
 @login_required

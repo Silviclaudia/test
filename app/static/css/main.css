@@ -73,39 +73,108 @@ p { margin: 0 0 0.8rem; color: var(--ink-soft); }
     padding: 0 0.15em;
 }
 
+/* ---------- BACKGROUND PARTICLES ---------- */
+
+.bg-particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.bg-particles span {
+    position: absolute;
+    font-family: "Caveat", cursive;
+    font-weight: 700;
+    user-select: none;
+    line-height: 1;
+}
+
+.bg-particles .p1 { top: 14%;  left: 38%; font-size: 1.7rem; color: var(--gold);     opacity: 0.22; transform: rotate(15deg); }
+.bg-particles .p2 { top: 22%;  right: 6%; font-size: 1.2rem; color: var(--accent);   opacity: 0.18; transform: rotate(-12deg); }
+.bg-particles .p3 { bottom: 18%; left: 18%; font-size: 1.5rem; color: var(--gold);   opacity: 0.20; transform: rotate(8deg); }
+.bg-particles .p4 { bottom: 30%; right: 14%; font-size: 1.05rem; color: var(--accent); opacity: 0.20; transform: rotate(22deg); }
+.bg-particles .p5 { top: 60%;  left: 6%;  font-size: 1.15rem; color: var(--accent-2); opacity: 0.18; transform: rotate(-8deg); }
+.bg-particles .p6 { top: 8%;   left: 12%; font-size: 0.95rem; color: var(--accent);  opacity: 0.16; transform: rotate(18deg); }
+.bg-particles .p7 { bottom: 8%; right: 32%; font-size: 1.3rem; color: var(--gold);   opacity: 0.20; transform: rotate(-14deg); }
+
+.site-header,
+.page-layout,
+.left-sidebar,
+.main-content { position: relative; z-index: 1; }
+
 /* ---------- HEADER ---------- */
 
 .site-header {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 1.1rem 2rem;
-    background: var(--paper);
-    border-bottom: 2px dashed var(--ink);
+    padding: 1.15rem 2.2rem;
+    background: var(--card);
+    border-bottom: 1px solid var(--paper-line);
+    box-shadow: 0 1px 0 rgba(21, 25, 46, 0.04);
+}
+
+.site-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gold);
+    z-index: 2;
 }
 
 .brand {
-    font-family: "Fraunces", Georgia, serif;
-    font-size: 1.45rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
     color: var(--ink);
-    transform: rotate(-1.5deg);
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1;
+}
+
+.brand::before {
+    content: "✦";
+    color: var(--gold);
+    font-family: "Caveat", cursive;
+    font-size: 1.4rem;
+    transform: translateY(-1px) rotate(-8deg);
     display: inline-block;
 }
 
 .brand .marker-underline {
-    background-image: linear-gradient(transparent 60%, var(--accent) 60%, var(--accent) 90%, transparent 90%);
+    background-image: linear-gradient(transparent 62%, var(--gold) 62%, var(--gold) 92%, transparent 92%);
+    padding: 0 0.12em;
 }
 
 .auth-actions {
     display: flex;
     align-items: center;
-    gap: 0.9rem;
-    font-family: "Caveat", cursive;
-    font-size: 1.2rem;
+    gap: 1.1rem;
     color: var(--ink);
+}
+
+.auth-actions .welcome {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--ink-soft);
+    font-family: "Nunito", sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.auth-actions .welcome b {
+    color: var(--ink);
+    font-weight: 800;
 }
 
 /* ---------- BUTTONS ---------- */
@@ -185,8 +254,8 @@ button.button {
     flex-direction: column;
     gap: 0.5rem;
     padding: 1.6rem 1.1rem;
-    background: var(--paper-deep);
-    border-right: 2px dashed var(--ink);
+    background: var(--card);
+    border-right: 1px solid var(--paper-line);
     position: relative;
 }
 

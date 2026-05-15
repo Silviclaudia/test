@@ -16,12 +16,22 @@
     </head>
 
     <body>
+        <div class="bg-particles" aria-hidden="true">
+            <span class="p1">✦</span>
+            <span class="p2">✦</span>
+            <span class="p3">✦</span>
+            <span class="p4">✦</span>
+            <span class="p5">✦</span>
+            <span class="p6">✦</span>
+            <span class="p7">✦</span>
+        </div>
+
         <header class="site-header">
             <a class="brand" href="{{ url_for('main.index') }}"><span class="marker-underline">Study</span> Dashboard</a>
 
             <nav class="auth-actions" aria-label="Authentication">
                 {% if current_user.is_authenticated %}
-                    <span>Welcome, {{ current_user.username }}!</span>
+                    <span class="welcome">Welcome, <b>{{ current_user.username }}</b></span>
                     <a class="button button-secondary" href="{{ url_for('main.logout') }}">Log Out</a>
                 {% else %}
                     <a class="button button-secondary" href="{{ url_for('main.login') }}">Sign In</a>

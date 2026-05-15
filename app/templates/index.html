@@ -5,9 +5,22 @@
 {% block content %}
 <section class="hero">
     <div>
-        <h1>Good to see you.</h1>
-        <p>Create a set, or jump into studying.</p>
-        <p>Flashcards that actually help you remember.</p>
+        <span class="eyebrow">hey there ✦</span>
+        <h1>Good to <span class="marker-underline">see</span> you.</h1>
+        <p>Make a set. Quiz yourself. Forget less, on purpose.</p>
+        {% if current_user.is_authenticated %}
+            <p style="margin-top:1rem;display:flex;gap:0.6rem;flex-wrap:wrap;">
+                <a class="button" href="{{ url_for('main.create_study_set') }}">
+                    <i class="fa-solid fa-plus"></i> New study set
+                </a>
+                <a class="button button-secondary" href="{{ url_for('main.study_sets') }}">My sets</a>
+            </p>
+        {% else %}
+            <p style="margin-top:1rem;display:flex;gap:0.6rem;flex-wrap:wrap;">
+                <a class="button" href="{{ url_for('main.register') }}">Get started</a>
+                <a class="button button-secondary" href="{{ url_for('main.login') }}">Sign in</a>
+            </p>
+        {% endif %}
     </div>
     <div class="hero-sketch" aria-hidden="true">
         <i class="fa-regular fa-star"></i>
@@ -15,60 +28,70 @@
 </section>
 
 <section class="study-modes" aria-labelledby="study-mode-heading">
-    <h2 id="study-mode-heading">Study modes</h2>
+    <div class="section-heading">
+        <h2 id="study-mode-heading">Study modes</h2>
+        <span class="handwritten" style="font-size:1.2rem;color:var(--ink-soft);">pick your vibe →</span>
+    </div>
     <div class="mode-list">
-        <a href="{{ url_for('main.index') }}" class="feature-link"> 
-            <article class="feature-card">
-                <span class="icon-bubble"><i class="fa-regular fa-copy"></i></span>
-                <div>
-                    <h3>Flip Mode</h3>
-                    <p>Go through your cards one by one.</p>
-                </div>
-            </article>
-        </a>
         <article class="feature-card">
-            <span class="icon-bubble">
-                <i class="fa-regular fa-circle-question"></i>
-            </span>
-            <div>
-                <h3>Quiz Mode</h3>
-                <p>Test what you know (or don't).</p>
-            </div>
+            <span class="icon-bubble"><i class="fa-regular fa-clone"></i></span>
+            <h3>Flip Mode</h3>
+            <p>Go through your cards one by one. Classic, calm, effective.</p>
         </article>
         <article class="feature-card">
-            <span class="icon-bubble">
-                <i class="fa-regular fa-clock"></i>
-            </span>
-            <div>
-                <h3>Time Game</h3>
-                <p>Answer as many as you can.</p>
-            </div>
+            <span class="icon-bubble"><i class="fa-regular fa-circle-question"></i></span>
+            <h3>Quiz Mode</h3>
+            <p>Test what you know — or what you definitely don't.</p>
+        </article>
+        <article class="feature-card">
+            <span class="icon-bubble"><i class="fa-regular fa-clock"></i></span>
+            <h3>Time Game</h3>
+            <p>Beat the clock. Answer as many as you can before it runs out.</p>
         </article>
     </div>
 </section>
 
 <section class="recent-sets" aria-labelledby="recent-set-heading">
     <div class="section-heading">
-        <h2 id="recent-set-heading">Recent public study sets</h2>
+        <h2 id="recent-set-heading">Fresh from the community</h2>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('main.search_public_sets') }}">browse all →</a>
+        {% endif %}
     </div>
     <div class="set-list">
         {% if recent_public_sets %}
             {% for study_set in recent_public_sets %}
-                <article class="set-row">
-                    <i class="fa-regular fa-bookmark"></i>
-                    <h3>{{ study_set.title }}</h3>
-                    <p>{{ study_set.flashcards|length }} cards</p>
-                    <p>by {{ study_set.owner.username }}</p>
-                    <p>Public</p>
-                </article>
+                {% if current_user.is_authenticated %}
+                    <a class="flashcard-preview" href="{{ url_for('main.browse_public_study_set', study_set_id=study_set.id) }}">
+                        <h3>{{ study_set.title }}</h3>
+                        {% if study_set.description %}
+                            <p>{{ study_set.description[:80] }}{% if study_set.description|length > 80 %}…{% endif %}</p>
+                        {% endif %}
+                        <div class="set-meta">
+                            <span class="card-count">{{ study_set.flashcards|length }} cards</span>
+                            <span class="set-owner">by {{ study_set.owner.username }}</span>
+                        </div>
+                    </a>
+                {% else %}
+                    <article class="flashcard-preview">
+                        <h3>{{ study_set.title }}</h3>
+                        {% if study_set.description %}
+                            <p>{{ study_set.description[:80] }}{% if study_set.description|length > 80 %}…{% endif %}</p>
+                        {% endif %}
+                        <div class="set-meta">
+                            <span class="card-count">{{ study_set.flashcards|length }} cards</span>
+                            <span class="set-owner">by {{ study_set.owner.username }}</span>
+                        </div>
+                    </article>
+                {% endif %}
             {% endfor %}
         {% else %}
-            <article class="set-row">
-                <i class="fa-regular fa-bookmark"></i>
-                <h3>No public study sets yet</h3>
-                <p>0 cards</p>
-                <p>Be the first to share one</p>
-                <p>-</p>
+            <article class="flashcard-preview">
+                <h3>Nothing here yet</h3>
+                <p>The community board is empty. Want to be the first?</p>
+                <div class="set-meta">
+                    <span class="card-count">0 cards</span>
+                </div>
             </article>
         {% endif %}
     </div>

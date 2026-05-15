@@ -1,98 +1,153 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Terms & Conditions</title>
-  <!-- Use CDN Line (change later) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
+{% extends "base.html" %}
 
-<body class="bg-gray-100 text-gray-800">
+{% block title %}Terms & Conditions | Study Dashboard{% endblock %}
 
-  <div class="max-w-4xl mx-auto py-10 px-6">
+{% block extra_css %}
+<style>
+    .terms-wrapper { max-width: 760px; }
 
-    <!-- Card -->
-    <div class="bg-white shadow-lg rounded-2xl p-8">
+    .terms-card {
+        position: relative;
+        margin-top: 0.6rem;
+        padding: 2rem 2rem 1.6rem;
+        background: var(--card);
+        border: 2px solid var(--ink);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-hard);
+        background-image: linear-gradient(var(--paper-line) 1px, transparent 1px);
+        background-size: 100% 30px;
+        background-position: 0 80px;
+    }
 
-      <!-- Title -->
-      <h1 class="text-3xl font-bold mb-2">Terms & Conditions</h1>
-      <p class="text-sm text-gray-500 mb-6">Effective Date: 30/04/2026</p>
+    .terms-card::before {
+        content: "the fine print ✦";
+        position: absolute;
+        top: -0.9rem;
+        right: 1.4rem;
+        padding: 0.25rem 0.85rem;
+        background: var(--sticky-y);
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        font-family: "Caveat", cursive;
+        font-size: 1.05rem;
+        color: var(--ink);
+        transform: rotate(4deg);
+        box-shadow: 3px 3px 0 0 var(--ink);
+    }
 
-      <!-- Intro -->
-      <p class="mb-6 text-gray-700 leading-relaxed">
-        Welcome to StudyFlow (“Platform”, “we”, “our”, “us”). By creating an account or using our Platform,
-        you agree to comply with and be bound by the following Terms & Conditions.
-      </p>
+    .terms-card .effective-date {
+        margin: 0 0 1.4rem;
+        color: var(--ink-faint);
+        font-family: "Caveat", cursive;
+        font-size: 1.2rem;
+    }
 
-      <!-- Sections -->
-      <div class="space-y-6">
+    .terms-card h2 {
+        margin: 1.6rem 0 0.4rem;
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 1.25rem;
+    }
 
-        <section>
-          <h2 class="text-xl font-semibold mb-2">1. Use of the Platform</h2>
-          <p class="text-gray-700 leading-relaxed">
-            Our Platform is designed to support learning through interactive study tools including study sets,
-            quizzes, flip mode, and time games. Users must use it for lawful educational purposes only.
-          </p>
-        </section>
+    .terms-card section:first-of-type h2 { margin-top: 0; }
 
-        <section>
-          <h2 class="text-xl font-semibold mb-2">2. User Accounts</h2>
-          <p class="text-gray-700 leading-relaxed">
-            Users must provide accurate information, keep credentials secure, and are responsible for all account activity.
-          </p>
-        </section>
+    .terms-card p { color: var(--ink); line-height: 1.6; }
 
-        <section>
-          <h2 class="text-xl font-semibold mb-2">3. Creating Content</h2>
-          <p class="text-gray-700 leading-relaxed">
-            Users must ensure content is original, legal, non-offensive, and safe for educational use.
-          </p>
-        </section>
+    .terms-card .email {
+        color: var(--accent);
+        font-weight: 800;
+        border-bottom: 2px dotted var(--accent);
+    }
 
-        <section>
-          <h2 class="text-xl font-semibold mb-2">4. Public Study Sets</h2>
-          <p class="text-gray-700 leading-relaxed">
-            Public content may be viewed by others and moderated. You still retain ownership but grant us usage rights.
-          </p>
-        </section>
+    .terms-footer {
+        margin-top: 1.8rem;
+        padding-top: 1rem;
+        border-top: 2px dashed var(--ink);
+        color: var(--ink-soft);
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
 
-        <section>
-          <h2 class="text-xl font-semibold mb-2">5. Community Conduct</h2>
-          <p class="text-gray-700 leading-relaxed">
-            Users must not harass others, spam, cheat, or misuse the platform in any way.
-          </p>
-        </section>
+{% block content %}
+<div class="terms-wrapper">
 
-        <section>
-          <h2 class="text-xl font-semibold mb-2">6. Intellectual Property</h2>
-          <p class="text-gray-700 leading-relaxed">
-            Platform design and branding belong to StudyFlow. Users may not copy or reverse engineer systems.
-          </p>
-        </section>
-
-        <section>
-          <h2 class="text-xl font-semibold mb-2">7. Limitation of Liability</h2>
-          <p class="text-gray-700 leading-relaxed">
-            The platform is provided “as is”. We are not responsible for data loss, downtime, or user outcomes.
-          </p>
-        </section>
-
-        <section>
-          <h2 class="text-xl font-semibold mb-2">8. Contact Us</h2>
-          <p class="text-gray-700 leading-relaxed">
-            Email: <span class="text-blue-600">studyflow@gmail.com.au</span>
-          </p>
-        </section>
-
-      </div>
-
-      <!-- Footer -->
-      <div class="mt-8 pt-6 border-t text-sm text-gray-500">
-        By using StudyFlow, you agree to these Terms & Conditions.
-      </div>
-
+    <div class="profile">
+        <div class="profile-info">
+            <a class="back-link" href="{{ url_for('main.register') }}">← back to sign up</a>
+            <span class="eyebrow handwritten" style="color:var(--accent);font-size:1.3rem;">read me ✦</span>
+            <h1>Terms &amp; <span class="marker-underline">Conditions</span></h1>
+        </div>
     </div>
-  </div>
 
-</body>
-</html>
+    <article class="terms-card">
+        <p class="effective-date">Effective date — 30 / 04 / 2026</p>
+
+        <p>
+            Welcome to StudyFlow (“Platform”, “we”, “our”, “us”). By creating an account or using our Platform,
+            you agree to comply with and be bound by the following Terms &amp; Conditions.
+        </p>
+
+        <section>
+            <h2>1. Use of the Platform</h2>
+            <p>
+                Our Platform is designed to support learning through interactive study tools including study sets,
+                quizzes, flip mode, and time games. Users must use it for lawful educational purposes only.
+            </p>
+        </section>
+
+        <section>
+            <h2>2. User Accounts</h2>
+            <p>
+                Users must provide accurate information, keep credentials secure, and are responsible for all account activity.
+            </p>
+        </section>
+
+        <section>
+            <h2>3. Creating Content</h2>
+            <p>
+                Users must ensure content is original, legal, non-offensive, and safe for educational use.
+            </p>
+        </section>
+
+        <section>
+            <h2>4. Public Study Sets</h2>
+            <p>
+                Public content may be viewed by others and moderated. You still retain ownership but grant us usage rights.
+            </p>
+        </section>
+
+        <section>
+            <h2>5. Community Conduct</h2>
+            <p>
+                Users must not harass others, spam, cheat, or misuse the platform in any way.
+            </p>
+        </section>
+
+        <section>
+            <h2>6. Intellectual Property</h2>
+            <p>
+                Platform design and branding belong to StudyFlow. Users may not copy or reverse engineer systems.
+            </p>
+        </section>
+
+        <section>
+            <h2>7. Limitation of Liability</h2>
+            <p>
+                The platform is provided “as is”. We are not responsible for data loss, downtime, or user outcomes.
+            </p>
+        </section>
+
+        <section>
+            <h2>8. Contact Us</h2>
+            <p>
+                Email: <span class="email">studyflow@gmail.com.au</span>
+            </p>
+        </section>
+
+        <div class="terms-footer">
+            By using StudyFlow, you agree to these Terms &amp; Conditions.
+        </div>
+    </article>
+
+</div>
+{% endblock %}

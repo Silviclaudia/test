@@ -1,64 +1,73 @@
 {% extends "base.html" %}
 {% block title %}Profile | Study Dashboard{% endblock %}
- 
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profilestyle.css') }}">
+{% endblock %}
+
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/profilestyle.css') }}">
- 
 <div class="profile-wrapper">
- 
-    <!-- Profile Header -->
+
     <div class="profile-header">
-        <div class="avatar">
+        <div class="polaroid">
             {% if current_user.profile_pic %}
                 <img src="{{ url_for('static', filename='uploads/' + current_user.profile_pic) }}" alt="Profile Picture">
             {% else %}
-                <div class="avatar-placeholder">
-                    {{ current_user.username[0].upper() }}
-                </div>
+                <div class="avatar-placeholder">{{ current_user.username[0].upper() }}</div>
             {% endif %}
+            <span class="caption">{{ current_user.username }}</span>
         </div>
         <div class="profile-info">
+            <span class="eyebrow handwritten" style="color:var(--accent);font-size:1.3rem;">welcome back ✦</span>
             <h1>{{ current_user.username }}</h1>
             <p class="profile-role">{{ current_user.email }}</p>
         </div>
     </div>
- 
-    <!-- Stats Row -->
+
     <div class="stats-row">
         <div class="stat-card">
             <h2>{{ total_cards }}</h2>
-            <p>Cards Study</p>
+            <p>Cards studied</p>
         </div>
         <div class="stat-card">
-            <h2>{{ streak }} Days</h2>
-            <p>Study Streak</p>
+            <h2>{{ streak }}<span style="font-size:1.4rem;"> days</span></h2>
+            <p>Study streak</p>
         </div>
         <div class="stat-card">
             <h2>{{ achievements }}</h2>
-            <p>Achievement</p>
+            <p>Achievements</p>
         </div>
     </div>
- 
-    <!-- Study Sets -->
+
     <div class="study-sets-section">
-        <h2>My Study Set</h2>
- 
+        <div class="section-heading">
+            <h2>My study sets</h2>
+            <a href="{{ url_for('main.create_study_set') }}">+ new set</a>
+        </div>
+
         {% if study_sets %}
-            {% for s in study_sets %}
-            <div class="study-item">
-                <div class="study-icon">
-                    <i class="fa-regular fa-rectangle-list"></i>
-                </div>
-                <div class="study-info">
-                    <h3>{{ s.title }}</h3>
-                    <p>{{ s.flashcards|length }} terms</p>
-                </div>
+            <div class="set-list">
+                {% for s in study_sets %}
+                    <a class="flashcard-preview" href="{{ url_for('main.study_set_detail', study_set_id=s.id) }}">
+                        <h3>{{ s.title }}</h3>
+                        {% if s.description %}
+                            <p>{{ s.description[:80] }}{% if s.description|length > 80 %}…{% endif %}</p>
+                        {% endif %}
+                        <div class="set-meta">
+                            <span class="card-count">{{ s.flashcards|length }} terms</span>
+                            {% if s.is_public %}
+                                <span class="set-owner">public</span>
+                            {% else %}
+                                <span class="set-owner">private</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endfor %}
             </div>
-            {% endfor %}
         {% else %}
-            <p class="no-sets">No study sets yet. <a href="{{ url_for('main.create_study_set') }}">Create one!</a></p>
+            <p class="no-sets">No study sets yet. <a href="{{ url_for('main.create_study_set') }}">Create your first one!</a></p>
         {% endif %}
     </div>
- 
+
 </div>
 {% endblock %}

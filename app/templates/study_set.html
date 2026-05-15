@@ -5,12 +5,13 @@
 {% block content %}
 <section class="profile">
     <div class="profile-info">
-        <a class="back-link" href="{{ url_for('main.study_sets') }}">Back to my study sets</a>
+        <a class="back-link" href="{{ url_for('main.study_sets') }}">← my study sets</a>
+        <span class="eyebrow handwritten" style="color:var(--accent);font-size:1.3rem;">your set ✦</span>
         <h1>{{ study_set.title }}</h1>
         {% if study_set.description %}
             <p>{{ study_set.description }}</p>
         {% else %}
-            <p>No description yet.</p>
+            <p style="color:var(--ink-faint);font-style:italic;">No description yet.</p>
         {% endif %}
     </div>
 </section>
@@ -18,48 +19,60 @@
 <section class="analytics-container" aria-label="Study set summary">
     <div class="stat-card">
         <h2>{{ study_set.flashcards|length }}</h2>
-        <h3>Cards</h3>
+        <p>Cards</p>
     </div>
     <div class="stat-card">
-        <h2>{% if study_set.is_public %}Public{% else %}Private{% endif %}</h2>
-        <h3>Visibility</h3>
+        <h2 style="font-size:2rem;">{% if study_set.is_public %}Public{% else %}Private{% endif %}</h2>
+        <p>Visibility</p>
     </div>
 </section>
 
 <section class="study-set-container">
-    <div class="section-heading">
+    <div class="section-heading" style="flex-wrap:wrap;gap:0.8rem;">
         <h2>Flashcards</h2>
-        <div class="inline-actions">
-            <a href="{{ url_for('main.edit_study_set', study_set_id=study_set.id) }}">Edit set</a>
+        <div class="inline-actions" style="flex-wrap:wrap;">
+            <a href="{{ url_for('main.edit_study_set', study_set_id=study_set.id) }}" class="button button-secondary">
+                <i class="fa-solid fa-pen"></i> Edit
+            </a>
             {% if study_set.flashcards %}
-                <a href="{{ url_for('main.study_set_study', study_set_id=study_set.id) }}">Study this set</a>
+                <a href="{{ url_for('main.study_set_study', study_set_id=study_set.id) }}" class="button">
+                    <i class="fa-solid fa-play"></i> Study
+                </a>
             {% endif %}
+            <form action="{{ url_for('main.delete_study_set', study_set_id=study_set.id) }}" method="post"
+                  style="margin:0;display:inline;"
+                  onsubmit="return confirm('Delete this study set? This cannot be undone.');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="button button-danger">
+                    <i class="fa-solid fa-trash"></i> Delete
+                </button>
+            </form>
         </div>
     </div>
-
-    <form action="{{ url_for('main.delete_study_set', study_set_id=study_set.id) }}" method="post" class="inline-delete-form">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    
-        <button type="submit" class="button button-danger">Delete set</button>
-    </form>
 
     {% if study_set.flashcards %}
         {% for flashcard in study_set.flashcards %}
             <article class="flashcard-row">
                 <div>
-                    <span class="flashcard-label">Term</span>
+                    <span class="flashcard-label">term</span>
                     <h3>{{ flashcard.question }}</h3>
                 </div>
                 <div>
-                    <span class="flashcard-label">Definition</span>
-                    <p>{{ flashcard.answer }}</p>
+                    <span class="flashcard-label">definition</span>
+                    <p style="color:var(--ink);">{{ flashcard.answer }}</p>
                 </div>
             </article>
         {% endfor %}
     {% else %}
-        <div class="study-item">
-            <h3>No flashcards yet</h3>
-            <p>Add cards to start studying this set.</p>
+        <div class="no-results" style="padding:1.4rem 1.5rem;background:var(--sticky-y);border:2px dashed var(--ink);border-radius:var(--radius);transform:rotate(-0.4deg);">
+            <h3 style="margin:0 0 0.4rem;">No flashcards yet</h3>
+            <p style="margin:0;color:var(--ink-soft);">
+                <a href="{{ url_for('main.edit_study_set', study_set_id=study_set.id) }}"
+                   style="color:var(--accent);border-bottom:2px dotted var(--accent);font-weight:800;">
+                    Add some cards
+                </a>
+                to start studying.
+            </p>
         </div>
     {% endif %}
 </section>

@@ -131,23 +131,33 @@ p { margin: 0 0 0.8rem; color: var(--ink-soft); }
 
 .brand {
     display: inline-flex;
-    align-items: baseline;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 0.85rem;
     color: var(--ink);
-    font-family: "Fraunces", Georgia, serif;
-    font-size: 1.55rem;
-    font-weight: 700;
-    letter-spacing: -0.025em;
+    text-decoration: none;
     line-height: 1;
 }
 
-.brand::before {
-    content: "✦";
-    color: var(--gold);
-    font-family: "Caveat", cursive;
-    font-size: 1.4rem;
-    transform: translateY(-1px) rotate(-8deg);
+.brand-logo {
+    height: 38px;
+    width: auto;
+    display: block;
+    flex: 0 0 auto;
+}
+
+.brand-divider {
     display: inline-block;
+    width: 1px;
+    height: 28px;
+    background: var(--paper-line);
+}
+
+.brand-text {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--ink);
 }
 
 .brand .marker-underline {
@@ -253,7 +263,7 @@ button.button {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding: 1.6rem 1.1rem;
+    padding: 1.6rem 1.1rem 1.4rem;
     background: var(--card);
     border-right: 1px solid var(--paper-line);
     position: relative;
@@ -302,9 +312,10 @@ button.button {
 .nav-item.active i { color: var(--ink); }
 
 .main-content {
-    max-width: 1180px;
+    max-width: 1400px;
     width: 100%;
-    padding: 2.4rem 2.8rem 4rem;
+    margin: 0 auto;
+    padding: 2.6rem clamp(1.6rem, 3.5vw, 3.6rem) 4rem;
 }
 
 /* ---------- ALERTS ---------- */
@@ -408,6 +419,7 @@ button.button {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.5rem;
+    max-width: 1080px;
 }
 
 .feature-card {
@@ -465,7 +477,7 @@ button.button {
 
 .set-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1.2rem;
 }
 
@@ -968,6 +980,10 @@ textarea.text-input:focus {
     .nav-item { padding: 0.45rem 0.75rem; font-size: 0.88rem; }
     .nav-item span { display: none; }
     .nav-item i { font-size: 1rem; }
+
+    .brand-logo { height: 32px; }
+    .brand-text { font-size: 1.1rem; }
+    .brand-divider { height: 22px; }
 
     .main-content { padding: 1.6rem 1.2rem 3rem; }
 

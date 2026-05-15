@@ -5,9 +5,10 @@
 {% block content %}
 <section class="profile">
     <div class="profile-info">
-        <a href="{{ url_for('main.study_set_detail', study_set_id=study_set.id) }}" class="back-link">Back to study set</a>
-        <h1>Edit {{ study_set.title }}</h1>
-        <p>Update details, visibility, and flashcards for this study set.</p>
+        <a href="{{ url_for('main.study_set_detail', study_set_id=study_set.id) }}" class="back-link">← back to study set</a>
+        <span class="eyebrow handwritten" style="color:var(--accent);font-size:1.3rem;">tidy up ✦</span>
+        <h1>Editing <span class="marker-underline">{{ study_set.title }}</span></h1>
+        <p>Update details, visibility, and flashcards.</p>
     </div>
 </section>
 
@@ -25,9 +26,9 @@
     <form action="{{ url_for('main.edit_study_set', study_set_id=study_set.id) }}" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-      
         <div class="card-section">
-            <label for="title">Set Title</label>
+            <h3>The basics</h3>
+            <label for="title">Set title</label>
             <input type="text" id="title" name="title" value="{{ study_set.title }}" required>
 
             <label for="description">Description</label>
@@ -42,9 +43,14 @@
         <div id="flashcards-list">
             {% for flashcard in study_set.flashcards %}
                 <div class="card-section question-block">
-                    <div class="inline-actions">
-                        <h3>Flashcard {{ loop.index }}</h3>
-                        <button type="button" class="button button-secondary remove-card">Remove</button>
+                    <div class="inline-actions" style="justify-content:space-between;width:100%;">
+                        <h3>
+                            <span class="handwritten" style="color:var(--accent);font-size:1.4rem;">card</span>
+                            <span style="font-family:'Fraunces',serif;">{{ loop.index }}</span>
+                        </h3>
+                        <button type="button" class="button button-ghost remove-card">
+                            <i class="fa-solid fa-xmark"></i> Remove
+                        </button>
                     </div>
                     <input type="hidden" name="flashcard_id" value="{{ flashcard.id }}">
 
@@ -58,21 +64,27 @@
         </div>
 
         <div class="form-footer">
-            <button type="button" id="add-flashcard" class="button button-secondary">+ Add Flashcard</button>
-            <button type="submit" class="button">Save Changes</button>
+            <button type="button" id="add-flashcard" class="button button-ghost">
+                <i class="fa-solid fa-plus"></i> Add another card
+            </button>
+            <button type="submit" class="button">Save changes</button>
         </div>
     </form>
 </section>
 
 <script>
-    const flashcardsList = document.querySelector("#questions-list") || document.querySelector("#flashcards-list");
+    const flashcardsList = document.querySelector("#flashcards-list");
     const addFlashcardButton = document.querySelector("#add-flashcard");
 
     function updateLabels() {
         const cards = flashcardsList.querySelectorAll(".question-block");
         cards.forEach((card, index) => {
             const number = index + 1;
-            card.querySelector("h3").textContent = `Flashcard ${number}`;
+            const heading = card.querySelector("h3");
+            heading.innerHTML = `
+                <span class="handwritten" style="color:var(--accent);font-size:1.4rem;">card</span>
+                <span style="font-family:'Fraunces',serif;">${number}</span>
+            `;
             const termInput = card.querySelector("input[name='term']");
             const definitionInput = card.querySelector("input[name='definition']");
             const termId = `term-${number}`;
@@ -88,9 +100,11 @@
         const card = document.createElement("div");
         card.className = "card-section question-block";
         card.innerHTML = `
-            <div class="inline-actions">
-                <h3>Flashcard</h3>
-                <button type="button" class="button button-secondary remove-card">Remove</button>
+            <div class="inline-actions" style="justify-content:space-between;width:100%;">
+                <h3></h3>
+                <button type="button" class="button button-ghost remove-card">
+                    <i class="fa-solid fa-xmark"></i> Remove
+                </button>
             </div>
             <input type="hidden" name="flashcard_id" value="">
 
@@ -109,10 +123,9 @@
     });
 
     flashcardsList.addEventListener("click", (event) => {
-        if (!event.target.classList.contains("remove-card")) {
-            return;
-        }
-        event.target.closest(".question-block").remove();
+        const removeBtn = event.target.closest(".remove-card");
+        if (!removeBtn) return;
+        removeBtn.closest(".question-block").remove();
         updateLabels();
     });
 

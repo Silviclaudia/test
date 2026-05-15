@@ -1,21 +1,23 @@
 :root {
-    --paper:        #faf6ee;
-    --paper-deep:   #f3ecdb;
-    --paper-line:   #e8dec5;
+    --paper:        #f2f5fb;
+    --paper-deep:   #e6ecf6;
+    --paper-line:   #d6deec;
     --card:         #ffffff;
-    --ink:          #1a1612;
-    --ink-soft:     #5e564d;
-    --ink-faint:    #9a8f80;
-    --accent:       #e85d75;
-    --accent-deep:  #c63d56;
-    --accent-2:     #7c5fdb;
-    --sticky-y:     #fff2b8;
+    --ink:          #15192e;
+    --ink-soft:     #4a4f6b;
+    --ink-faint:    #8a8fa8;
+    --accent:       #27348B;
+    --accent-deep:  #1b2570;
+    --accent-2:     #8a6800;
+    --gold:         #E2B600;
+    --gold-soft:    #f4d977;
+    --sticky-y:     #fde88a;
     --sticky-p:     #ffd6e0;
-    --sticky-b:     #c9e0ff;
+    --sticky-b:     #c8d2ec;
     --sticky-g:     #cdf0d7;
     --sticky-o:     #ffd9b3;
-    --marker:       #ffe066;
-    --danger:       #d84848;
+    --marker:       #f4d977;
+    --danger:       #b13a3a;
     --shadow-hard:  4px 4px 0 0 var(--ink);
     --shadow-soft:  3px 3px 0 0 var(--ink);
     --radius:       14px;
@@ -28,8 +30,7 @@
 
 html {
     background:
-        radial-gradient(circle at 20% 10%, rgba(232, 93, 117, 0.05), transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(124, 95, 219, 0.05), transparent 40%),
+        radial-gradient(circle at 15% 5%, rgba(39, 52, 139, 0.06), transparent 35%),
         var(--paper);
 }
 

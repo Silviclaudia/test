@@ -1,17 +1,18 @@
 :root {
-    --paper:        #faf6ee;
-    --paper-deep:   #f3ecdb;
+    --paper:        #f2f5fb;
+    --paper-deep:   #e6ecf6;
     --card:         #ffffff;
-    --ink:          #1a1612;
-    --ink-soft:     #5e564d;
-    --ink-faint:    #9a8f80;
-    --accent:       #e85d75;
-    --accent-deep:  #c63d56;
-    --accent-2:     #7c5fdb;
-    --sticky-y:     #fff2b8;
+    --ink:          #15192e;
+    --ink-soft:     #4a4f6b;
+    --ink-faint:    #8a8fa8;
+    --accent:       #27348B;
+    --accent-deep:  #1b2570;
+    --accent-2:     #8a6800;
+    --gold:         #E2B600;
+    --sticky-y:     #fde88a;
     --sticky-p:     #ffd6e0;
-    --sticky-b:     #c9e0ff;
-    --marker:       #ffe066;
+    --sticky-b:     #c8d2ec;
+    --marker:       #f4d977;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -21,8 +22,8 @@ body {
     font-family: "Nunito", "Trebuchet MS", system-ui, sans-serif;
     color: var(--ink);
     background:
-        radial-gradient(circle at 15% 20%, rgba(232, 93, 117, 0.08), transparent 45%),
-        radial-gradient(circle at 85% 80%, rgba(124, 95, 219, 0.08), transparent 45%),
+        radial-gradient(circle at 15% 20%, rgba(39, 52, 139, 0.08), transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(226, 182, 0, 0.10), transparent 45%),
         var(--paper);
     -webkit-font-smoothing: antialiased;
 }

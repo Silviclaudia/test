@@ -50,6 +50,7 @@ body {
   display: block;
 }
 
+/* Right side form */
 .login-form {
   padding: 56px;
 }
@@ -57,10 +58,31 @@ body {
 .login-form h1 {
   font-size: 34px;
   font-weight: 700;
-  margin-bottom: 36px;
+  margin-bottom: 24px;
   color: var(--text-main);
 }
 
+/* Flash error message */
+.form-errors {
+  background-color: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #be123c;
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin-bottom: 22px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-errors p {
+  margin: 0;
+}
+
+.flash-danger {
+  color: #be123c;
+}
+
+/* Social login buttons */
 .social-login {
   display: flex;
   flex-direction: column;
@@ -110,6 +132,7 @@ body {
   color: #111827;
 }
 
+/* Divider */
 .divider {
   display: flex;
   align-items: center;
@@ -128,6 +151,7 @@ body {
   font-size: 14px;
 }
 
+/* Login form */
 form {
   display: flex;
   flex-direction: column;
@@ -150,6 +174,8 @@ form {
   padding: 0 18px;
   font-size: 15px;
   outline: none;
+  background-color: white;
+  color: var(--text-main);
 }
 
 .input-group input:focus {
@@ -178,6 +204,7 @@ form {
   text-decoration: underline;
 }
 
+/* Main login button */
 .login-button {
   width: 100%;
   height: 56px;
@@ -194,8 +221,11 @@ form {
 
 .login-button:hover {
   background-color: #5a4bd8;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(108, 92, 231, 0.22);
 }
 
+/* Sign up link */
 .sign-up {
   margin-top: 34px;
   text-align: center;
@@ -216,6 +246,7 @@ form {
   text-decoration: underline;
 }
 
+/* Responsive design */
 @media (max-width: 768px) {
   .login-card {
     grid-template-columns: 1fr;

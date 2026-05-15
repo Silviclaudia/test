@@ -2,87 +2,74 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up | Study Dashboard</title>
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/registerstyle.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Nunito:wght@400;600;700;800&family=Caveat:wght@500;600;700&display=swap">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registerstyle.css') }}">
 </head>
 
 <body>
 
-  <div class="content">
+    <header class="brand-strip">
+        <a href="{{ url_for('main.index') }}"><span class="marker">Study</span> Dashboard</a>
+    </header>
 
-    <div class="introduction">
-      <h1>Create your account</h1>
-      <h4>Start your learning with us</h4>
+    <div class="page">
+
+        <div class="content">
+
+            <div class="introduction">
+                <h1>Make your <span class="marker">account</span></h1>
+                <h4>start learning with us ✦</h4>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('main.register') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <label for="name">Username</label>
+                <input type="text" id="name" name="name" placeholder="pick something memorable" required>
+
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+
+                <label for="confirm_password">Confirm password</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required>
+
+                <div class="terms-group">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">
+                        I agree to the
+                        <a href="{{ url_for('main.terms') }}">Terms and Conditions</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn">Create account</button>
+            </form>
+
+            <p class="sign-in-page">
+                Already have one?
+                <a href="{{ url_for('main.login') }}">Sign in</a>
+            </p>
+
+        </div>
+
     </div>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="alert alert-{{ category }}">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-
-    <form method="POST" action="{{ url_for('main.register') }}">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-      <label for="name">Full Name</label>
-      <input 
-        type="text" 
-        id="name" 
-        name="name" 
-        required
-      >
-
-      <label for="email">Email Address</label>
-      <input 
-        type="email" 
-        id="email" 
-        name="email" 
-        required
-      >
-
-      <label for="password">Password</label>
-      <input 
-        type="password" 
-        id="password" 
-        name="password" 
-        required
-      >
-
-      <label for="confirm_password">Confirm Password</label>
-      <input 
-        type="password" 
-        id="confirm_password" 
-        name="confirm_password" 
-        required
-      >
-
-      <div class="terms-group">
-        <input 
-          type="checkbox" 
-          id="terms" 
-          name="terms" 
-          required
-        >
-        <label for="terms">
-          I agree to the
-          <a href="{{ url_for('main.terms') }}">Terms and Conditions</a>
-        </label>
-      </div>
-
-      <button type="submit" class="submit-btn">Create Account</button>
-    </form>
-
-    <p class="sign-in-page">
-      Already have an account?
-      <a href="{{ url_for('main.login') }}">Sign In</a>
-    </p>
-
-  </div>
 
 </body>
 

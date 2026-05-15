@@ -5,33 +5,35 @@
 {% block content %}
 <section class="profile">
     <div class="profile-info">
-        <h1>Analytics</h1>
-        <p>Overview of your current study set and flashcard usage.</p>
+        <span class="eyebrow handwritten" style="color:var(--accent);font-size:1.3rem;">the receipts ✦</span>
+        <h1>Your <span class="marker-underline">numbers</span></h1>
+        <p>How your sets and flashcards are stacking up.</p>
     </div>
 </section>
 
 <section class="analytics-container" aria-label="Analytics summary">
     <div class="stat-card">
         <h2>{{ total_cards }}</h2>
-        <h3>Total Cards</h3>
+        <p>Total cards</p>
     </div>
     <div class="stat-card">
         <h2>{{ total_sets }}</h2>
-        <h3>Total Study Sets</h3>
+        <p>Total sets</p>
     </div>
     <div class="stat-card">
         <h2>{{ public_sets }}</h2>
-        <h3>Public Study Sets</h3>
+        <p>Public sets</p>
     </div>
     <div class="stat-card">
         <h2>{{ average_cards }}</h2>
-        <h3>Avg Cards Per Set</h3>
+        <p>Avg per set</p>
     </div>
 </section>
 
 <section class="study-set-container">
     <div class="section-heading">
         <h2>Card count by recent sets</h2>
+        <span class="handwritten" style="font-size:1.15rem;color:var(--ink-soft);">last 7 sets →</span>
     </div>
     <div class="bar-chart-area">
         {% for val in chart_data %}

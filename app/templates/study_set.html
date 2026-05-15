@@ -41,6 +41,11 @@
                 <a href="{{ url_for('main.study_set_quiz', study_set_id=study_set.id) }}" class="button" style="background:var(--accent-2);">
                     <i class="fa-regular fa-circle-question"></i> Quiz
                 </a>
+                {% if study_set.flashcards|length >= 2 %}
+                    <a href="{{ url_for('main.study_set_time', study_set_id=study_set.id) }}" class="button" style="background:#e8a13d;">
+                        <i class="fa-regular fa-clock"></i> Time
+                    </a>
+                {% endif %}
             {% endif %}
             <form action="{{ url_for('main.delete_study_set', study_set_id=study_set.id) }}" method="post"
                   style="margin:0;display:inline;"

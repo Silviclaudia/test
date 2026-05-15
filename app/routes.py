@@ -372,6 +372,14 @@ MODE_CONFIG = {
         "start_endpoint": "main.study_set_quiz",
         "cta": "Start quiz",
     },
+    "time": {
+        "title": "Time Game",
+        "tagline": "Beat the clock — answer as many as you can in 60 seconds.",
+        "eyebrow": "time game ✦",
+        "accent": "#e8a13d",
+        "start_endpoint": "main.study_set_time",
+        "cta": "Start the clock",
+    },
 }
 
 
@@ -383,6 +391,16 @@ def study_set_quiz(study_set_id):
         flash("Add at least one flashcard before starting a quiz.")
         return redirect(url_for("main.study_set_detail", study_set_id=study_set.id))
     return render_template("quiz_mode.html", study_set=study_set)
+
+
+@main.route("/study-sets/<int:study_set_id>/time")
+@login_required
+def study_set_time(study_set_id):
+    study_set = get_owned_study_set_or_404(study_set_id)
+    if len(study_set.flashcards) < 2:
+        flash("Add at least two flashcards before starting Time Game.")
+        return redirect(url_for("main.study_set_detail", study_set_id=study_set.id))
+    return render_template("time_mode.html", study_set=study_set)
 
 
 @main.route("/modes/<mode>")

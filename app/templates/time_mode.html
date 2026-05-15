@@ -1,0 +1,435 @@
+{% extends "base.html" %}
+
+{% block title %}Time Game: {{ study_set.title }} | Study Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .time-wrapper { max-width: 760px; }
+
+    .time-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        padding: 0.9rem 1.2rem;
+        background: var(--card);
+        border: 2px solid var(--ink);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-soft);
+    }
+
+    .time-clock {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        font-family: "Caveat", cursive;
+        font-size: 1.4rem;
+        color: var(--ink);
+        font-weight: 700;
+    }
+
+    .time-clock .seconds {
+        font-family: "Fraunces", serif;
+        font-size: 2.2rem;
+        line-height: 1;
+        color: #e8a13d;
+        font-weight: 700;
+        min-width: 2.4ch;
+        text-align: right;
+    }
+
+    .time-clock.warning .seconds { color: var(--accent); }
+    .time-clock.danger .seconds  { color: var(--accent-deep); animation: pulse 0.5s ease-in-out infinite alternate; }
+
+    @keyframes pulse {
+        from { transform: scale(1); }
+        to   { transform: scale(1.15); }
+    }
+
+    .time-stats {
+        display: flex;
+        gap: 1.4rem;
+        font-family: "Caveat", cursive;
+        font-size: 1.3rem;
+    }
+
+    .time-stats .right-count  { color: #2f9e6b; font-weight: 700; }
+    .time-stats .wrong-count  { color: var(--accent-deep); font-weight: 700; }
+
+    .time-progress-track {
+        width: 100%;
+        height: 10px;
+        margin-bottom: 1.2rem;
+        background: var(--paper-deep);
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    .time-progress-fill {
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(90deg, #74c69d, #ffe066, #e8a13d, #e85d75);
+        transition: width 0.2s linear;
+    }
+
+    .time-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.9rem;
+        margin-top: 0.4rem;
+    }
+
+    @media (max-width: 600px) { .time-options { grid-template-columns: 1fr; } }
+
+    .time-option {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 1rem 1.1rem;
+        background: var(--card);
+        border: 2px solid var(--ink);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-soft);
+        font-family: "Nunito", sans-serif;
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: var(--ink);
+        cursor: pointer;
+        text-align: left;
+        transition: transform 0.06s ease, box-shadow 0.06s ease, background 0.1s ease;
+    }
+
+    .time-option:hover:not(:disabled) {
+        background: var(--sticky-y);
+        transform: translate(-1px, -1px);
+        box-shadow: 4px 4px 0 0 var(--ink);
+    }
+
+    .time-option .letter {
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 30px;
+        height: 30px;
+        background: var(--paper-deep);
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        font-family: "Fraunces", serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+
+    .time-option.flash-correct { background: var(--sticky-g); }
+    .time-option.flash-wrong   { background: var(--sticky-p); }
+
+    .time-results {
+        padding: 2rem;
+        background: var(--card);
+        border: 2.5px solid var(--ink);
+        border-radius: var(--radius);
+        box-shadow: 6px 6px 0 0 var(--ink);
+        text-align: center;
+        transform: rotate(-0.4deg);
+    }
+
+    .time-results .big-score {
+        font-family: "Caveat", cursive;
+        font-size: 5rem;
+        line-height: 1;
+        color: #e8a13d;
+        font-weight: 700;
+    }
+
+    .time-results h2 {
+        margin: 0.6rem 0;
+        font-family: "Fraunces", serif;
+        font-size: 1.8rem;
+    }
+
+    .time-results .breakdown {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin: 1rem 0;
+        font-family: "Nunito", sans-serif;
+        font-size: 1rem;
+        color: var(--ink-soft);
+    }
+
+    .time-results .breakdown b { color: var(--ink); font-size: 1.4rem; font-family: "Fraunces", serif; display: block; }
+
+    .time-results .actions {
+        display: flex;
+        gap: 0.8rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 1.4rem;
+    }
+
+    .time-start-card {
+        padding: 2.4rem 2rem;
+        background: var(--sticky-y);
+        border: 2.5px solid var(--ink);
+        border-radius: var(--radius);
+        box-shadow: 6px 6px 0 0 var(--ink);
+        text-align: center;
+        transform: rotate(-0.5deg);
+    }
+
+    .time-start-card h2 {
+        margin: 0 0 0.6rem;
+        font-family: "Fraunces", serif;
+        font-size: 2rem;
+    }
+
+    .time-start-card .countdown {
+        font-family: "Caveat", cursive;
+        font-size: 4rem;
+        color: var(--accent-deep);
+        font-weight: 700;
+        line-height: 1;
+        margin: 0.6rem 0;
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="time-wrapper">
+
+    <section class="profile">
+        <div class="profile-info">
+            <a class="back-link" href="{{ url_for('main.study_set_detail', study_set_id=study_set.id) }}">← back to study set</a>
+            <span class="eyebrow handwritten" style="color:#e8a13d;font-size:1.3rem;">time game ✦</span>
+            <h1>{{ study_set.title }}</h1>
+            <p>60 seconds. Answer as many as you can. No do-overs.</p>
+        </div>
+    </section>
+
+    <div id="time-intro" class="time-start-card">
+        <h2>Ready?</h2>
+        <p style="margin:0 0 1.2rem;color:var(--ink);">Tap a definition to lock it in. Right or wrong, the next card flies in.</p>
+        <div class="countdown" id="countdown"></div>
+        <button type="button" class="button" id="start-button" style="background:#e8a13d;">
+            <i class="fa-solid fa-bolt"></i> Start the clock
+        </button>
+    </div>
+
+    <div id="time-stage" style="display:none;">
+        <div class="time-bar">
+            <div class="time-clock" id="time-clock">
+                <span>time</span>
+                <span class="seconds" id="time-seconds">60</span>
+                <span>s</span>
+            </div>
+            <div class="time-stats">
+                <span class="right-count">✓ <span id="right-count">0</span></span>
+                <span class="wrong-count">✗ <span id="wrong-count">0</span></span>
+            </div>
+        </div>
+
+        <div class="time-progress-track">
+            <div class="time-progress-fill" id="progress-fill"></div>
+        </div>
+
+        <article class="review-card">
+            <span class="flashcard-label">term</span>
+            <h2 id="t-term"></h2>
+        </article>
+
+        <div class="time-options" id="t-options"></div>
+    </div>
+
+    <div id="time-results" class="time-results" style="display:none;">
+        <span class="handwritten" style="font-size:1.4rem;color:#e8a13d;">time's up ✦</span>
+        <div class="big-score"><span id="r-score">0</span></div>
+        <h2 id="r-message">Nice run.</h2>
+        <div class="breakdown">
+            <span><b id="r-right">0</b>correct</span>
+            <span><b id="r-wrong">0</b>wrong</span>
+            <span><b id="r-acc">0%</b>accuracy</span>
+        </div>
+        <div class="actions">
+            <button type="button" class="button" id="r-retry" style="background:#e8a13d;">
+                <i class="fa-solid fa-rotate-right"></i> Play again
+            </button>
+            <a class="button button-secondary" href="{{ url_for('main.study_set_detail', study_set_id=study_set.id) }}">
+                Back to set
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const cards = {{ study_set.flashcards|map(attribute='question')|list|tojson }}.map((q, i) => ({
+        term: q,
+        answer: {{ study_set.flashcards|map(attribute='answer')|list|tojson }}[i],
+    }));
+    const allAnswers = cards.map(c => c.answer);
+    const TOTAL_TIME = 60;
+    const letters = ["A", "B", "C", "D"];
+
+    function shuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function buildOptions(correct) {
+        const distractors = shuffle(allAnswers.filter(a => a !== correct)).slice(0, 3);
+        return shuffle([correct, ...distractors]);
+    }
+
+    const intro = document.querySelector("#time-intro");
+    const stage = document.querySelector("#time-stage");
+    const results = document.querySelector("#time-results");
+    const startButton = document.querySelector("#start-button");
+    const countdown = document.querySelector("#countdown");
+    const tTerm = document.querySelector("#t-term");
+    const tOptions = document.querySelector("#t-options");
+    const timeSeconds = document.querySelector("#time-seconds");
+    const timeClock = document.querySelector("#time-clock");
+    const progressFill = document.querySelector("#progress-fill");
+    const rightCountEl = document.querySelector("#right-count");
+    const wrongCountEl = document.querySelector("#wrong-count");
+
+    let queue = [];
+    let queueIndex = 0;
+    let timerId = null;
+    let endsAt = 0;
+    let right = 0;
+    let wrong = 0;
+    let answered = false;
+
+    function nextCard() {
+        if (queueIndex >= queue.length) {
+            queue = shuffle(cards);
+            queueIndex = 0;
+        }
+        return queue[queueIndex++];
+    }
+
+    function renderCard() {
+        answered = false;
+        const card = nextCard();
+        tTerm.textContent = card.term;
+        const opts = buildOptions(card.answer);
+        tOptions.innerHTML = "";
+        opts.forEach((opt, i) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "time-option";
+            btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${escapeHtml(opt)}</span>`;
+            btn.addEventListener("click", () => choose(btn, opt, card.answer));
+            tOptions.appendChild(btn);
+        });
+    }
+
+    function choose(btn, picked, correct) {
+        if (answered) return;
+        answered = true;
+        const isRight = picked === correct;
+        if (isRight) {
+            right += 1;
+            rightCountEl.textContent = right;
+            btn.classList.add("flash-correct");
+        } else {
+            wrong += 1;
+            wrongCountEl.textContent = wrong;
+            btn.classList.add("flash-wrong");
+            tOptions.querySelectorAll(".time-option").forEach(b => {
+                if (b.textContent.trim() === correct) b.classList.add("flash-correct");
+            });
+        }
+        tOptions.querySelectorAll(".time-option").forEach(b => b.disabled = true);
+        setTimeout(() => {
+            if (Date.now() < endsAt) renderCard();
+        }, isRight ? 200 : 700);
+    }
+
+    function tick() {
+        const remaining = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000));
+        timeSeconds.textContent = remaining;
+        progressFill.style.width = `${(remaining / TOTAL_TIME) * 100}%`;
+        timeClock.classList.toggle("warning", remaining <= 15 && remaining > 5);
+        timeClock.classList.toggle("danger",  remaining <= 5);
+        if (remaining <= 0) {
+            clearInterval(timerId);
+            timerId = null;
+            showResults();
+        }
+    }
+
+    function start() {
+        right = 0;
+        wrong = 0;
+        rightCountEl.textContent = "0";
+        wrongCountEl.textContent = "0";
+        queue = shuffle(cards);
+        queueIndex = 0;
+        intro.style.display = "none";
+        results.style.display = "none";
+        stage.style.display = "";
+        endsAt = Date.now() + TOTAL_TIME * 1000;
+        tick();
+        timerId = setInterval(tick, 200);
+        renderCard();
+    }
+
+    function showResults() {
+        stage.style.display = "none";
+        results.style.display = "";
+        document.querySelector("#r-score").textContent = right;
+        document.querySelector("#r-right").textContent = right;
+        document.querySelector("#r-wrong").textContent = wrong;
+        const total = right + wrong;
+        const acc = total ? Math.round((right / total) * 100) : 0;
+        document.querySelector("#r-acc").textContent = `${acc}%`;
+        const msg =
+            right >= 20 ? "Lightning hands." :
+            right >= 12 ? "Sharp work." :
+            right >= 6  ? "Solid pace." :
+                          "Warm-up done — go again.";
+        document.querySelector("#r-message").textContent = msg;
+    }
+
+    startButton.addEventListener("click", () => {
+        startButton.disabled = true;
+        let n = 3;
+        countdown.style.display = "block";
+        countdown.textContent = n;
+        const id = setInterval(() => {
+            n -= 1;
+            if (n > 0) {
+                countdown.textContent = n;
+            } else {
+                clearInterval(id);
+                start();
+            }
+        }, 700);
+    });
+
+    document.querySelector("#r-retry").addEventListener("click", () => {
+        intro.style.display = "";
+        results.style.display = "none";
+        startButton.disabled = false;
+        countdown.style.display = "none";
+        countdown.textContent = "";
+    });
+
+    function escapeHtml(s) {
+        return String(s)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;");
+    }
+</script>
+{% endblock %}

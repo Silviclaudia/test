@@ -6,9 +6,8 @@
 <section class="profile">
     <div class="profile-info">
         <a href="{{ url_for('main.index') }}" class="back-link">← back to dashboard</a>
-        <span class="eyebrow handwritten" style="color:var(--accent);font-size:1.3rem;">brand new ✦</span>
-        <h1>Make a <span class="marker-underline">study set</span></h1>
-        <p>Build your own custom flashcard set, one card at a time.</p>
+        <h1>Create a <span class="marker-underline">study set</span></h1>
+        <p>Give it a title, an optional description, and add as many cards as you like.</p>
     </div>
 </section>
 
@@ -41,7 +40,7 @@
                 <span class="icon">AI</span>
                 <h3>AI Flashcard Generator</h3>
             </div>
-            <textarea name="ai-input" placeholder="Paste your notes — we'll do the rest." rows="4" disabled></textarea>
+            <textarea name="ai-input" placeholder="Paste your notes here…" rows="4" disabled></textarea>
             <p class="hint">e.g. paste a paragraph from your textbook</p>
             <button type="button" class="btn-ai" disabled>Generate flashcards</button>
         </div>

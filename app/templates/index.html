@@ -1,26 +1,32 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard | Study App{% endblock %}
+{% block title %}Dashboard | Study Dashboard{% endblock %}
 
 {% block content %}
+{% set flip_href = url_for('main.mode_select', mode='flip') if current_user.is_authenticated else url_for('main.login', next=url_for('main.mode_select', mode='flip')) %}
+{% set quiz_href = url_for('main.mode_select', mode='quiz') if current_user.is_authenticated else url_for('main.login', next=url_for('main.mode_select', mode='quiz')) %}
+{% set time_href = url_for('main.mode_select', mode='time') if current_user.is_authenticated else url_for('main.login', next=url_for('main.mode_select', mode='time')) %}
+
 <section class="hero">
     <div>
-        <span class="eyebrow">hey there ✦</span>
-        <h1>Good to <span class="marker-underline">see</span> you.</h1>
-        <p>Make a set. Quiz yourself. Forget less, on purpose.</p>
         {% if current_user.is_authenticated %}
-            <p style="margin-top:1rem;display:flex;gap:0.6rem;flex-wrap:wrap;">
+            <h1>Welcome back, <span class="marker-underline">{{ current_user.username }}</span>.</h1>
+            <p>Pick up a set, create a new one, or try a quick quiz.</p>
+        {% else %}
+            <h1>Study smarter with <span class="marker-underline">flashcards</span>.</h1>
+            <p>Create your own sets, practise with three study modes, and share what you make with classmates.</p>
+        {% endif %}
+        <div class="hero-actions">
+            {% if current_user.is_authenticated %}
                 <a class="button" href="{{ url_for('main.create_study_set') }}">
                     <i class="fa-solid fa-plus"></i> New study set
                 </a>
                 <a class="button button-secondary" href="{{ url_for('main.study_sets') }}">My sets</a>
-            </p>
-        {% else %}
-            <p style="margin-top:1rem;display:flex;gap:0.6rem;flex-wrap:wrap;">
+            {% else %}
                 <a class="button" href="{{ url_for('main.register') }}">Get started</a>
                 <a class="button button-secondary" href="{{ url_for('main.login') }}">Sign in</a>
-            </p>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
     <div class="hero-sketch" aria-hidden="true">
         <i class="fa-regular fa-star"></i>
@@ -30,54 +36,30 @@
 <section class="study-modes" aria-labelledby="study-mode-heading">
     <div class="section-heading">
         <h2 id="study-mode-heading">Study modes</h2>
-        <span class="handwritten" style="font-size:1.2rem;color:var(--ink-soft);">pick your vibe →</span>
+        <span class="hint-handwritten">pick a mode →</span>
     </div>
     <div class="mode-list">
-        {% if current_user.is_authenticated %}
-            <a class="feature-card" href="{{ url_for('main.mode_select', mode='flip') }}">
-                <span class="icon-bubble"><i class="fa-regular fa-clone"></i></span>
-                <h3>Flip Mode</h3>
-                <p>Go through your cards one by one. Classic, calm, effective.</p>
-            </a>
-        {% else %}
-            <a class="feature-card" href="{{ url_for('main.login', next=url_for('main.mode_select', mode='flip')) }}">
-                <span class="icon-bubble"><i class="fa-regular fa-clone"></i></span>
-                <h3>Flip Mode</h3>
-                <p>Go through your cards one by one. Classic, calm, effective.</p>
-            </a>
-        {% endif %}
-        {% if current_user.is_authenticated %}
-            <a class="feature-card" href="{{ url_for('main.mode_select', mode='quiz') }}">
-                <span class="icon-bubble"><i class="fa-regular fa-circle-question"></i></span>
-                <h3>Quiz Mode</h3>
-                <p>Test what you know — or what you definitely don't.</p>
-            </a>
-        {% else %}
-            <a class="feature-card" href="{{ url_for('main.login', next=url_for('main.mode_select', mode='quiz')) }}">
-                <span class="icon-bubble"><i class="fa-regular fa-circle-question"></i></span>
-                <h3>Quiz Mode</h3>
-                <p>Test what you know — or what you definitely don't.</p>
-            </a>
-        {% endif %}
-        {% if current_user.is_authenticated %}
-            <a class="feature-card" href="{{ url_for('main.mode_select', mode='time') }}">
-                <span class="icon-bubble"><i class="fa-regular fa-clock"></i></span>
-                <h3>Time Game</h3>
-                <p>Beat the clock. Answer as many as you can before it runs out.</p>
-            </a>
-        {% else %}
-            <a class="feature-card" href="{{ url_for('main.login', next=url_for('main.mode_select', mode='time')) }}">
-                <span class="icon-bubble"><i class="fa-regular fa-clock"></i></span>
-                <h3>Time Game</h3>
-                <p>Beat the clock. Answer as many as you can before it runs out.</p>
-            </a>
-        {% endif %}
+        <a class="feature-card" href="{{ flip_href }}">
+            <span class="icon-bubble"><i class="fa-regular fa-clone"></i></span>
+            <h3>Flip mode</h3>
+            <p>Step through your cards one at a time at your own pace.</p>
+        </a>
+        <a class="feature-card" href="{{ quiz_href }}">
+            <span class="icon-bubble"><i class="fa-regular fa-circle-question"></i></span>
+            <h3>Quiz mode</h3>
+            <p>Multiple-choice questions drawn from your set.</p>
+        </a>
+        <a class="feature-card" href="{{ time_href }}">
+            <span class="icon-bubble"><i class="fa-regular fa-clock"></i></span>
+            <h3>Time game</h3>
+            <p>Answer as many as you can in 60 seconds.</p>
+        </a>
     </div>
 </section>
 
 <section class="recent-sets" aria-labelledby="recent-set-heading">
     <div class="section-heading">
-        <h2 id="recent-set-heading">Fresh from the community</h2>
+        <h2 id="recent-set-heading">Recent public study sets</h2>
         {% if current_user.is_authenticated %}
             <a href="{{ url_for('main.search_public_sets') }}">browse all →</a>
         {% endif %}
@@ -85,34 +67,29 @@
     <div class="set-list">
         {% if recent_public_sets %}
             {% for study_set in recent_public_sets %}
-                {% if current_user.is_authenticated %}
-                    <a class="flashcard-preview" href="{{ url_for('main.browse_public_study_set', study_set_id=study_set.id) }}">
-                        <h3>{{ study_set.title }}</h3>
-                        {% if study_set.description %}
-                            <p>{{ study_set.description[:80] }}{% if study_set.description|length > 80 %}…{% endif %}</p>
-                        {% endif %}
-                        <div class="set-meta">
-                            <span class="card-count">{{ study_set.flashcards|length }} cards</span>
-                            <span class="set-owner">by {{ study_set.owner.username }}</span>
-                        </div>
-                    </a>
-                {% else %}
-                    <article class="flashcard-preview">
-                        <h3>{{ study_set.title }}</h3>
-                        {% if study_set.description %}
-                            <p>{{ study_set.description[:80] }}{% if study_set.description|length > 80 %}…{% endif %}</p>
-                        {% endif %}
-                        <div class="set-meta">
-                            <span class="card-count">{{ study_set.flashcards|length }} cards</span>
-                            <span class="set-owner">by {{ study_set.owner.username }}</span>
-                        </div>
-                    </article>
-                {% endif %}
+                {% set tag = 'a' if current_user.is_authenticated else 'article' %}
+                <{{ tag }} class="flashcard-preview"
+                    {% if current_user.is_authenticated %} href="{{ url_for('main.browse_public_study_set', study_set_id=study_set.id) }}"{% endif %}>
+                    <h3>{{ study_set.title }}</h3>
+                    {% if study_set.description %}
+                        <p>{{ study_set.description[:80] }}{% if study_set.description|length > 80 %}…{% endif %}</p>
+                    {% endif %}
+                    <div class="set-meta">
+                        <span class="card-count">{{ study_set.flashcards|length }} cards</span>
+                        <span class="set-owner">by {{ study_set.owner.username }}</span>
+                    </div>
+                </{{ tag }}>
             {% endfor %}
         {% else %}
             <article class="flashcard-preview">
-                <h3>Nothing here yet</h3>
-                <p>The community board is empty. Want to be the first?</p>
+                <h3>No public sets yet</h3>
+                <p>
+                    {% if current_user.is_authenticated %}
+                        Create a set and mark it public to share it here.
+                    {% else %}
+                        Sign in to create the first one.
+                    {% endif %}
+                </p>
                 <div class="set-meta">
                     <span class="card-count">0 cards</span>
                 </div>

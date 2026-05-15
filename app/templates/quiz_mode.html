@@ -138,7 +138,6 @@
     <section class="profile">
         <div class="profile-info">
             <a class="back-link" href="{{ url_for('main.study_set_detail', study_set_id=study_set.id) }}">← back to study set</a>
-            <span class="eyebrow handwritten" style="color:var(--accent-2);font-size:1.3rem;">quiz mode ✦</span>
             <h1>{{ study_set.title }}</h1>
             <p>Pick the correct definition for each term.</p>
         </div>
@@ -167,7 +166,7 @@
     </div>
 
     <div id="quiz-results" class="quiz-results" style="display:none;">
-        <span class="handwritten" style="font-size:1.4rem;color:var(--accent);">all done ✦</span>
+        <span class="handwritten" style="font-size:1.4rem;color:var(--accent);">all done</span>
         <div class="big-score"><span id="r-score">0</span> / <span id="r-total">0</span></div>
         <h2 id="r-message">Nice work.</h2>
         <p id="r-percent" style="color:var(--ink-soft);"></p>
@@ -262,11 +261,11 @@
         if (picked === correct) {
             score += 1;
             qScore.textContent = score;
-            qFeedback.textContent = "Nailed it.";
+            qFeedback.textContent = "Correct.";
             qFeedback.className = "quiz-feedback right";
         } else {
             btn.classList.add("wrong");
-            qFeedback.textContent = `Not quite — the answer was: ${correct}`;
+            qFeedback.textContent = `The answer was: ${correct}`;
             qFeedback.className = "quiz-feedback miss";
         }
         qNext.style.display = "";
@@ -290,10 +289,10 @@
         const pct = Math.round((score / order.length) * 100);
         document.querySelector("#r-percent").textContent = `${pct}% correct`;
         const msg =
-            pct === 100 ? "Perfect run." :
-            pct >= 80  ? "Strong showing." :
-            pct >= 50  ? "Solid — another go?" :
-                         "Plenty of room to grow.";
+            pct === 100 ? "Perfect score." :
+            pct >= 80  ? "Great work." :
+            pct >= 50  ? "Not bad. Try again?" :
+                         "Worth another go.";
         document.querySelector("#r-message").textContent = msg;
     }
 

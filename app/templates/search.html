@@ -5,9 +5,8 @@
 {% block content %}
 <section class="profile">
     <div class="profile-info">
-        <span class="eyebrow handwritten" style="color:var(--accent);font-size:1.3rem;">poke around ✦</span>
         <h1>Find a <span class="marker-underline">study</span> set</h1>
-        <p>Browse flashcard sets shared by the community.</p>
+        <p>Browse public flashcard sets shared by other users.</p>
     </div>
 </section>
 
@@ -32,9 +31,7 @@
         <h2>
             {% if query_text or owner_text %}
                 Results
-                <span class="handwritten" style="font-size:1.1rem;color:var(--ink-soft);margin-left:0.4rem;">
-                    {{ results|length }} found
-                </span>
+                <span class="hint-handwritten" style="margin-left:0.4rem;">{{ results|length }} found</span>
             {% else %}
                 Recently shared
             {% endif %}
@@ -55,9 +52,9 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="no-results" style="padding:1.4rem 1.5rem;background:var(--sticky-y);border:2px dashed var(--ink);border-radius:var(--radius);transform:rotate(-0.4deg);">
-            <h3 style="margin:0 0 0.4rem;">Nothing matched.</h3>
-            <p style="margin:0;color:var(--ink-soft);">Try a different keyword or owner filter — or clear them to see what's out there.</p>
+        <div class="empty-note">
+            <h3>No results</h3>
+            <p>Try a different keyword or owner, or clear the filters to see everything.</p>
         </div>
     {% endif %}
 </section>

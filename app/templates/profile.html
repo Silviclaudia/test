@@ -10,15 +10,10 @@
 
     <div class="profile-header">
         <div class="polaroid">
-            {% if current_user.profile_pic %}
-                <img src="{{ url_for('static', filename='uploads/' + current_user.profile_pic) }}" alt="Profile Picture">
-            {% else %}
-                <div class="avatar-placeholder">{{ current_user.username[0].upper() }}</div>
-            {% endif %}
+            <div class="avatar-placeholder" aria-hidden="true">{{ current_user.username[0].upper() }}</div>
             <span class="caption">{{ current_user.username }}</span>
         </div>
         <div class="profile-info">
-            <span class="eyebrow handwritten" style="color:var(--accent);font-size:1.3rem;">welcome back ✦</span>
             <h1>{{ current_user.username }}</h1>
             <p class="profile-role">{{ current_user.email }}</p>
         </div>

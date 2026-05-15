@@ -6,7 +6,6 @@
 <section class="profile">
     <div class="profile-info">
         <a class="back-link" href="{{ url_for('main.index') }}">← back to dashboard</a>
-        <span class="eyebrow handwritten" style="color:{{ config.accent }};font-size:1.3rem;">{{ config.eyebrow }}</span>
         <h1>{{ config.title }}</h1>
         <p>{{ config.tagline }}</p>
     </div>
@@ -15,7 +14,6 @@
 <section class="study-set-container">
     <div class="section-heading">
         <h2>Pick a set</h2>
-        <span class="handwritten" style="font-size:1.15rem;color:var(--ink-soft);">your sets ↓</span>
     </div>
 
     {% if study_sets %}

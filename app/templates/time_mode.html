@@ -33,7 +33,7 @@
         font-family: "Fraunces", serif;
         font-size: 2.2rem;
         line-height: 1;
-        color: #e8a13d;
+        color: #8c2d3a;
         font-weight: 700;
         min-width: 2.4ch;
         text-align: right;
@@ -70,7 +70,7 @@
     .time-progress-fill {
         height: 100%;
         width: 100%;
-        background: linear-gradient(90deg, #74c69d, #ffe066, #e8a13d, #e85d75);
+        background: linear-gradient(90deg, #2f6b4f, var(--gold), #8c2d3a);
         transition: width 0.2s linear;
     }
 
@@ -139,7 +139,7 @@
         font-family: "Caveat", cursive;
         font-size: 5rem;
         line-height: 1;
-        color: #e8a13d;
+        color: #8c2d3a;
         font-weight: 700;
     }
 
@@ -203,17 +203,16 @@
     <section class="profile">
         <div class="profile-info">
             <a class="back-link" href="{{ url_for('main.study_set_detail', study_set_id=study_set.id) }}">← back to study set</a>
-            <span class="eyebrow handwritten" style="color:#e8a13d;font-size:1.3rem;">time game ✦</span>
             <h1>{{ study_set.title }}</h1>
-            <p>60 seconds. Answer as many as you can. No do-overs.</p>
+            <p>You have 60 seconds. Answer as many cards as you can.</p>
         </div>
     </section>
 
     <div id="time-intro" class="time-start-card">
         <h2>Ready?</h2>
-        <p style="margin:0 0 1.2rem;color:var(--ink);">Tap a definition to lock it in. Right or wrong, the next card flies in.</p>
+        <p style="margin:0 0 1.2rem;color:var(--ink);">Tap a definition to lock it in. The next card appears right after.</p>
         <div class="countdown" id="countdown"></div>
-        <button type="button" class="button" id="start-button" style="background:#e8a13d;">
+        <button type="button" class="button" id="start-button" style="background:#8c2d3a;">
             <i class="fa-solid fa-bolt"></i> Start the clock
         </button>
     </div>
@@ -244,7 +243,7 @@
     </div>
 
     <div id="time-results" class="time-results" style="display:none;">
-        <span class="handwritten" style="font-size:1.4rem;color:#e8a13d;">time's up ✦</span>
+        <span class="handwritten" style="font-size:1.4rem;color:#8c2d3a;">time's up</span>
         <div class="big-score"><span id="r-score">0</span></div>
         <h2 id="r-message">Nice run.</h2>
         <div class="breakdown">
@@ -253,7 +252,7 @@
             <span><b id="r-acc">0%</b>accuracy</span>
         </div>
         <div class="actions">
-            <button type="button" class="button" id="r-retry" style="background:#e8a13d;">
+            <button type="button" class="button" id="r-retry" style="background:#8c2d3a;">
                 <i class="fa-solid fa-rotate-right"></i> Play again
             </button>
             <a class="button button-secondary" href="{{ url_for('main.study_set_detail', study_set_id=study_set.id) }}">
@@ -393,10 +392,10 @@
         const acc = total ? Math.round((right / total) * 100) : 0;
         document.querySelector("#r-acc").textContent = `${acc}%`;
         const msg =
-            right >= 20 ? "Lightning hands." :
-            right >= 12 ? "Sharp work." :
-            right >= 6  ? "Solid pace." :
-                          "Warm-up done — go again.";
+            right >= 20 ? "Excellent run." :
+            right >= 12 ? "Great work." :
+            right >= 6  ? "Solid effort." :
+                          "Try another round.";
         document.querySelector("#r-message").textContent = msg;
     }
 

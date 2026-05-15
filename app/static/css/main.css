@@ -73,6 +73,158 @@ p { margin: 0 0 0.8rem; color: var(--ink-soft); }
     padding: 0 0.15em;
 }
 
+/* ---------- UTILITY CLASSES ---------- */
+
+.eyebrow {
+    display: inline-block;
+    margin-bottom: 0.3rem;
+    color: var(--accent);
+    font-family: "Caveat", cursive;
+    font-size: 1.3rem;
+    font-weight: 700;
+    transform: rotate(-1deg);
+}
+
+.eyebrow-gold    { color: var(--accent-2); }
+.eyebrow-maroon  { color: #8c2d3a; }
+
+.hint-handwritten {
+    font-family: "Caveat", cursive;
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    font-weight: 600;
+}
+
+.muted-italic {
+    color: var(--ink-faint);
+    font-style: italic;
+}
+
+.empty-note {
+    padding: 1.4rem 1.5rem;
+    background: var(--sticky-y);
+    border: 2px dashed var(--ink);
+    border-radius: var(--radius);
+    transform: rotate(-0.4deg);
+}
+
+.empty-note h3 { margin: 0 0 0.4rem; }
+.empty-note p  { margin: 0; color: var(--ink-soft); }
+
+.subtle-link {
+    color: var(--accent);
+    font-weight: 800;
+    border-bottom: 2px dotted var(--accent);
+}
+
+.subtle-link:hover { color: var(--accent-deep); border-bottom-color: var(--accent-deep); }
+
+.section-tag {
+    position: absolute;
+    top: -0.6rem;
+    right: 1.2rem;
+    padding: 0.18rem 0.75rem;
+    background: var(--sticky-y);
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    font-family: "Caveat", cursive;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    transform: rotate(4deg);
+    box-shadow: 3px 3px 0 0 var(--ink);
+}
+
+.section-tag-pink { background: var(--sticky-p); }
+.section-tag-blue { background: var(--sticky-b); }
+
+.button-quiz { background: var(--accent-2); }
+.button-quiz:hover { background: #6b520d; }
+
+.button-time { background: #8c2d3a; }
+.button-time:hover { background: #6e2230; }
+
+.actions-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin: 1.2rem 0 0;
+}
+
+.stat-card .stat-text {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.8rem;
+    line-height: 1;
+    color: var(--ink);
+}
+
+.section-heading-wrap {
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.set-attribution {
+    margin-top: 0.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.definition-text { color: var(--ink); }
+
+.inline-form { margin: 0; display: inline; }
+
+.card-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    margin: 0 0 0.6rem;
+}
+
+.card-heading .card-label {
+    color: var(--accent);
+    font-family: "Caveat", cursive;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.card-heading .card-num {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.options-hint {
+    margin-top: 1rem;
+    color: var(--ink-soft);
+    font-weight: 700;
+}
+
+.options-hint .quiet {
+    color: var(--ink-faint);
+    font-family: "Caveat", cursive;
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+.flashcard-edit-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 0.6rem;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
 /* ---------- BACKGROUND PARTICLES ---------- */
 
 .bg-particles {
@@ -102,7 +254,92 @@ p { margin: 0 0 0.8rem; color: var(--ink-soft); }
 .site-header,
 .page-layout,
 .left-sidebar,
-.main-content { position: relative; z-index: 1; }
+.main-content,
+.site-footer { position: relative; z-index: 1; }
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ---------- FOOTER ---------- */
+
+.site-footer {
+    margin-top: 2rem;
+    padding: 1.2rem 2.2rem;
+    background: var(--card);
+    border-top: 1px solid var(--paper-line);
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+}
+
+.site-footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.4rem;
+    flex-wrap: wrap;
+}
+
+.site-footer-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+}
+
+.site-footer-mark {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.55rem;
+    background: var(--sticky-y);
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    color: var(--ink);
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.site-footer-text { color: var(--ink-soft); }
+
+.site-footer-links {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--ink-faint);
+}
+
+.site-footer-links a {
+    color: var(--ink-soft);
+    font-weight: 700;
+    border-bottom: 1.5px dotted transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.site-footer-links a:hover,
+.site-footer-links a:focus-visible {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    outline: none;
+}
+
+@media (max-width: 600px) {
+    .site-footer { padding: 1.1rem 1.2rem; text-align: center; }
+    .site-footer-inner { justify-content: center; }
+    .site-footer-meta { justify-content: center; }
+}
 
 /* ---------- HEADER ---------- */
 
@@ -168,23 +405,41 @@ p { margin: 0 0 0.8rem; color: var(--ink-soft); }
 .auth-actions {
     display: flex;
     align-items: center;
-    gap: 1.1rem;
+    gap: 0.8rem;
     color: var(--ink);
 }
 
 .auth-actions .welcome {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.5rem;
+    padding: 0.45rem 0.8rem;
     color: var(--ink-soft);
+    background: transparent;
+    border: 1.5px dashed transparent;
+    border-radius: var(--radius-sm);
     font-family: "Nunito", sans-serif;
     font-size: 0.92rem;
     font-weight: 600;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.auth-actions .welcome i {
+    color: var(--accent);
+    font-size: 1.05rem;
 }
 
 .auth-actions .welcome b {
     color: var(--ink);
     font-weight: 800;
+}
+
+.auth-actions .welcome:hover,
+.auth-actions .welcome:focus-visible {
+    background: var(--paper);
+    border-color: var(--ink);
+    color: var(--ink);
+    outline: none;
 }
 
 /* ---------- BUTTONS ---------- */

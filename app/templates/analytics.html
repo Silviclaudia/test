@@ -5,9 +5,8 @@
 {% block content %}
 <section class="profile">
     <div class="profile-info">
-        <span class="eyebrow handwritten" style="color:var(--accent);font-size:1.3rem;">the receipts ✦</span>
-        <h1>Your <span class="marker-underline">numbers</span></h1>
-        <p>How your sets and flashcards are stacking up.</p>
+        <h1>Your <span class="marker-underline">analytics</span></h1>
+        <p>A summary of your study sets and flashcards.</p>
     </div>
 </section>
 
@@ -33,7 +32,7 @@
 <section class="study-set-container">
     <div class="section-heading">
         <h2>Card count by recent sets</h2>
-        <span class="handwritten" style="font-size:1.15rem;color:var(--ink-soft);">last 7 sets →</span>
+        <span class="hint-handwritten">last 7 sets</span>
     </div>
     <div class="bar-chart-area">
         {% for val in chart_data %}

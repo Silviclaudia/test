@@ -45,9 +45,6 @@ Install dependencies:
 
 ```bash
 pip install -r requirements.txt
-
-```
-
 ```
 
 Start the Flask development server:
@@ -56,7 +53,9 @@ Start the Flask development server:
 python run.py
 ```
 
-Open <http://127.0.0.1:5000> in your browser.
+Open <http://127.0.0.1:5000> in your browser. (If macOS AirPlay Receiver is using
+port 5000, either disable it under System Settings → General → AirDrop & Handoff
+or set `app.run(port=5001)` in `run.py`.)
 
 ## Run Tests
 

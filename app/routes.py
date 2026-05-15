@@ -364,7 +364,25 @@ MODE_CONFIG = {
         "start_endpoint": "main.study_set_study",
         "cta": "Start flipping",
     },
+    "quiz": {
+        "title": "Quiz Mode",
+        "tagline": "Test what you know with multiple-choice questions.",
+        "eyebrow": "quiz mode ✦",
+        "accent": "var(--accent-2)",
+        "start_endpoint": "main.study_set_quiz",
+        "cta": "Start quiz",
+    },
 }
+
+
+@main.route("/study-sets/<int:study_set_id>/quiz")
+@login_required
+def study_set_quiz(study_set_id):
+    study_set = get_owned_study_set_or_404(study_set_id)
+    if not study_set.flashcards:
+        flash("Add at least one flashcard before starting a quiz.")
+        return redirect(url_for("main.study_set_detail", study_set_id=study_set.id))
+    return render_template("quiz_mode.html", study_set=study_set)
 
 
 @main.route("/modes/<mode>")

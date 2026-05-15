@@ -46,11 +46,19 @@
                 <p>Go through your cards one by one. Classic, calm, effective.</p>
             </a>
         {% endif %}
-        <article class="feature-card">
-            <span class="icon-bubble"><i class="fa-regular fa-circle-question"></i></span>
-            <h3>Quiz Mode</h3>
-            <p>Test what you know — or what you definitely don't.</p>
-        </article>
+        {% if current_user.is_authenticated %}
+            <a class="feature-card" href="{{ url_for('main.mode_select', mode='quiz') }}">
+                <span class="icon-bubble"><i class="fa-regular fa-circle-question"></i></span>
+                <h3>Quiz Mode</h3>
+                <p>Test what you know — or what you definitely don't.</p>
+            </a>
+        {% else %}
+            <a class="feature-card" href="{{ url_for('main.login', next=url_for('main.mode_select', mode='quiz')) }}">
+                <span class="icon-bubble"><i class="fa-regular fa-circle-question"></i></span>
+                <h3>Quiz Mode</h3>
+                <p>Test what you know — or what you definitely don't.</p>
+            </a>
+        {% endif %}
         <article class="feature-card">
             <span class="icon-bubble"><i class="fa-regular fa-clock"></i></span>
             <h3>Time Game</h3>

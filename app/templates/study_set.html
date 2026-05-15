@@ -36,7 +36,10 @@
             </a>
             {% if study_set.flashcards %}
                 <a href="{{ url_for('main.study_set_study', study_set_id=study_set.id) }}" class="button">
-                    <i class="fa-solid fa-play"></i> Study
+                    <i class="fa-solid fa-play"></i> Flip
+                </a>
+                <a href="{{ url_for('main.study_set_quiz', study_set_id=study_set.id) }}" class="button" style="background:var(--accent-2);">
+                    <i class="fa-regular fa-circle-question"></i> Quiz
                 </a>
             {% endif %}
             <form action="{{ url_for('main.delete_study_set', study_set_id=study_set.id) }}" method="post"

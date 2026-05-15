@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz: {{ study_set.title }} | Study Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .quiz-wrapper { max-width: 760px; }
+
+    .quiz-meta {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 0.8rem;
+        font-family: "Caveat", cursive;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--ink-soft);
+    }
+
+    .quiz-meta .score { color: var(--accent-2); }
+
+    .quiz-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.9rem;
+        margin-top: 0.4rem;
+    }
+
+    @media (max-width: 600px) { .quiz-options { grid-template-columns: 1fr; } }
+
+    .quiz-option {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 1rem 1.1rem;
+        background: var(--card);
+        border: 2px solid var(--ink);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-soft);
+        font-family: "Nunito", sans-serif;
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: var(--ink);
+        cursor: pointer;
+        text-align: left;
+        transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s ease;
+    }
+
+    .quiz-option:hover:not(:disabled) {
+        background: var(--sticky-y);
+        transform: translate(-1px, -1px);
+        box-shadow: 4px 4px 0 0 var(--ink);
+    }
+
+    .quiz-option:disabled { cursor: default; }
+
+    .quiz-option .letter {
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 32px;
+        height: 32px;
+        background: var(--paper-deep);
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        font-family: "Fraunces", serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+    }
+
+    .quiz-option.correct { background: var(--sticky-g); }
+    .quiz-option.correct .letter { background: #74c69d; }
+    .quiz-option.wrong   { background: var(--sticky-p); }
+    .quiz-option.wrong .letter { background: #f08a8a; }
+    .quiz-option.correct,
+    .quiz-option.wrong { transform: rotate(-0.4deg); }
+
+    .quiz-feedback {
+        margin-top: 1.2rem;
+        padding: 1rem 1.2rem;
+        border: 2px dashed var(--ink);
+        border-radius: var(--radius);
+        font-family: "Caveat", cursive;
+        font-size: 1.4rem;
+        text-align: center;
+        background: var(--paper-deep);
+        display: none;
+    }
+
+    .quiz-feedback.right { background: var(--sticky-g); display: block; }
+    .quiz-feedback.miss  { background: var(--sticky-p); display: block; }
+
+    .quiz-next-row {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1rem;
+    }
+
+    .quiz-results {
+        padding: 2rem;
+        background: var(--card);
+        border: 2.5px solid var(--ink);
+        border-radius: var(--radius);
+        box-shadow: 6px 6px 0 0 var(--ink);
+        text-align: center;
+        transform: rotate(-0.4deg);
+    }
+
+    .quiz-results .big-score {
+        font-family: "Caveat", cursive;
+        font-size: 5rem;
+        line-height: 1;
+        color: var(--accent-2);
+        font-weight: 700;
+    }
+
+    .quiz-results h2 {
+        margin: 0.6rem 0;
+        font-family: "Fraunces", serif;
+        font-size: 1.8rem;
+    }
+
+    .quiz-results .actions {
+        display: flex;
+        gap: 0.8rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 1.4rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="quiz-wrapper">
+
+    <section class="profile">
+        <div class="profile-info">
+            <a class="back-link" href="{{ url_for('main.study_set_detail', study_set_id=study_set.id) }}">← back to study set</a>
+            <span class="eyebrow handwritten" style="color:var(--accent-2);font-size:1.3rem;">quiz mode ✦</span>
+            <h1>{{ study_set.title }}</h1>
+            <p>Pick the correct definition for each term.</p>
+        </div>
+    </section>
+
+    <div id="quiz-stage">
+        <div class="quiz-meta">
+            <span>card <span id="q-num">1</span> of <span id="q-total">{{ study_set.flashcards|length }}</span></span>
+            <span class="score">score: <span id="q-score">0</span></span>
+        </div>
+
+        <article class="review-card">
+            <span class="flashcard-label">term</span>
+            <h2 id="q-term"></h2>
+        </article>
+
+        <div class="quiz-options" id="q-options"></div>
+
+        <div class="quiz-feedback" id="q-feedback"></div>
+
+        <div class="quiz-next-row">
+            <button type="button" class="button" id="q-next" style="display:none;">
+                Next <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="quiz-results" class="quiz-results" style="display:none;">
+        <span class="handwritten" style="font-size:1.4rem;color:var(--accent);">all done ✦</span>
+        <div class="big-score"><span id="r-score">0</span> / <span id="r-total">0</span></div>
+        <h2 id="r-message">Nice work.</h2>
+        <p id="r-percent" style="color:var(--ink-soft);"></p>
+        <div class="actions">
+            <button type="button" class="button" id="r-retry">
+                <i class="fa-solid fa-rotate-right"></i> Try again
+            </button>
+            <a class="button button-secondary" href="{{ url_for('main.study_set_detail', study_set_id=study_set.id) }}">
+                Back to set
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const cards = {{ study_set.flashcards|map(attribute='question')|list|tojson }}.map((q, i) => ({
+        term: q,
+        answer: {{ study_set.flashcards|map(attribute='answer')|list|tojson }}[i],
+    }));
+    const allAnswers = cards.map(c => c.answer);
+
+    function shuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function buildOptions(correct) {
+        const distractors = shuffle(allAnswers.filter(a => a !== correct)).slice(0, 3);
+        return shuffle([correct, ...distractors]);
+    }
+
+    const stage = document.querySelector("#quiz-stage");
+    const results = document.querySelector("#quiz-results");
+    const qNum = document.querySelector("#q-num");
+    const qScore = document.querySelector("#q-score");
+    const qTerm = document.querySelector("#q-term");
+    const qOptions = document.querySelector("#q-options");
+    const qFeedback = document.querySelector("#q-feedback");
+    const qNext = document.querySelector("#q-next");
+    const letters = ["A", "B", "C", "D"];
+
+    let order = [];
+    let index = 0;
+    let score = 0;
+    let answered = false;
+
+    function start() {
+        order = shuffle(cards);
+        index = 0;
+        score = 0;
+        stage.style.display = "";
+        results.style.display = "none";
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        answered = false;
+        const card = order[index];
+        qNum.textContent = index + 1;
+        qScore.textContent = score;
+        qTerm.textContent = card.term;
+        qFeedback.className = "quiz-feedback";
+        qFeedback.textContent = "";
+        qNext.style.display = "none";
+
+        const opts = buildOptions(card.answer);
+        qOptions.innerHTML = "";
+        opts.forEach((opt, i) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "quiz-option";
+            btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${escapeHtml(opt)}</span>`;
+            btn.addEventListener("click", () => choose(btn, opt, card.answer));
+            qOptions.appendChild(btn);
+        });
+    }
+
+    function choose(btn, picked, correct) {
+        if (answered) return;
+        answered = true;
+        const buttons = qOptions.querySelectorAll(".quiz-option");
+        buttons.forEach(b => {
+            b.disabled = true;
+            const text = b.textContent.trim();
+            if (text === correct) b.classList.add("correct");
+        });
+        if (picked === correct) {
+            score += 1;
+            qScore.textContent = score;
+            qFeedback.textContent = "Nailed it.";
+            qFeedback.className = "quiz-feedback right";
+        } else {
+            btn.classList.add("wrong");
+            qFeedback.textContent = `Not quite — the answer was: ${correct}`;
+            qFeedback.className = "quiz-feedback miss";
+        }
+        qNext.style.display = "";
+        qNext.focus();
+    }
+
+    qNext.addEventListener("click", () => {
+        if (index + 1 < order.length) {
+            index += 1;
+            renderQuestion();
+        } else {
+            showResults();
+        }
+    });
+
+    function showResults() {
+        stage.style.display = "none";
+        results.style.display = "";
+        document.querySelector("#r-score").textContent = score;
+        document.querySelector("#r-total").textContent = order.length;
+        const pct = Math.round((score / order.length) * 100);
+        document.querySelector("#r-percent").textContent = `${pct}% correct`;
+        const msg =
+            pct === 100 ? "Perfect run." :
+            pct >= 80  ? "Strong showing." :
+            pct >= 50  ? "Solid — another go?" :
+                         "Plenty of room to grow.";
+        document.querySelector("#r-message").textContent = msg;
+    }
+
+    document.querySelector("#r-retry").addEventListener("click", start);
+
+    function escapeHtml(s) {
+        return String(s)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;");
+    }
+
+    start();
+</script>
+{% endblock %}

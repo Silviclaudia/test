@@ -27,7 +27,13 @@
         </div>
 
         <header class="site-header">
-            <a class="brand" href="{{ url_for('main.index') }}"><span class="marker-underline">Study</span> Dashboard</a>
+            <a class="brand" href="{{ url_for('main.index') }}">
+                <img src="{{ url_for('static', filename='img/uwa_logo.png') }}"
+                     alt="The University of Western Australia"
+                     class="brand-logo">
+                <span class="brand-divider" aria-hidden="true"></span>
+                <span class="brand-text">CITS3403 Project <span class="marker-underline">CAVSLIT</span></span>
+            </a>
 
             <nav class="auth-actions" aria-label="Authentication">
                 {% if current_user.is_authenticated %}

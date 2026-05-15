@@ -5,34 +5,44 @@
 {% block content %}
 <section class="profile">
     <div class="profile-info">
-        <a class="back-link" href="{{ url_for('main.search_public_sets') }}">Back to search</a>
+        <a class="back-link" href="{{ url_for('main.search_public_sets') }}">← back to search</a>
+        <span class="eyebrow handwritten" style="color:var(--accent-2);font-size:1.3rem;">community pick ✦</span>
         <h1>{{ study_set.title }}</h1>
-        <p>{{ study_set.description or "No description yet." }}</p>
-        <p>Shared by {{ study_set.owner.username }}</p>
+        {% if study_set.description %}
+            <p>{{ study_set.description }}</p>
+        {% else %}
+            <p style="color:var(--ink-faint);font-style:italic;">No description.</p>
+        {% endif %}
+        <p style="margin-top:0.6rem;">
+            <span class="card-count">{{ study_set.flashcards|length }} cards</span>
+            <span class="set-owner" style="margin-left:0.5rem;">shared by {{ study_set.owner.username }}</span>
+        </p>
     </div>
 </section>
 
 <section class="study-set-container">
     <div class="section-heading">
         <h2>Flashcards</h2>
+        <span class="handwritten" style="font-size:1.15rem;color:var(--ink-soft);">peek away →</span>
     </div>
+
     {% if study_set.flashcards %}
         {% for flashcard in study_set.flashcards %}
             <article class="flashcard-row">
                 <div>
-                    <span class="flashcard-label">Term</span>
+                    <span class="flashcard-label">term</span>
                     <h3>{{ flashcard.question }}</h3>
                 </div>
                 <div>
-                    <span class="flashcard-label">Definition</span>
-                    <p>{{ flashcard.answer }}</p>
+                    <span class="flashcard-label">definition</span>
+                    <p style="color:var(--ink);">{{ flashcard.answer }}</p>
                 </div>
             </article>
         {% endfor %}
     {% else %}
-        <div class="study-item">
-            <h3>No flashcards in this set yet</h3>
-            <p>Check back later for updates.</p>
+        <div class="no-results" style="padding:1.4rem 1.5rem;background:var(--sticky-y);border:2px dashed var(--ink);border-radius:var(--radius);transform:rotate(-0.4deg);">
+            <h3 style="margin:0 0 0.4rem;">No flashcards in this set yet</h3>
+            <p style="margin:0;color:var(--ink-soft);">Check back later — the owner might be adding to it.</p>
         </div>
     {% endif %}
 </section>

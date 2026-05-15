@@ -1,93 +1,86 @@
 {% extends "base.html" %}
 
-{% block title %}Settings{% endblock %}
+{% block title %}Settings | Study Dashboard{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/setting.css') }}">
+{% endblock %}
 
 {% block content %}
-
-<link rel="stylesheet" href="{{ url_for('static', filename='css/setting.css') }}">
-
 <div class="settings-page">
 
-  <div class="settings-header">
-    <h1>Settings</h1>
-    <p>Manage your account preferences and notification settings.</p>
-  </div>
-
-  <form method="POST" action="{{ url_for('main.settings') }}">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-    <div class="settings-card">
-      <h2>Account</h2>
-
-      <div class="input-group">
-        <label for="username">Username</label>
-        <input 
-          type="text" 
-          id="username" 
-          name="username" 
-          value="{{ current_user.username }}"
-          required
-        >
-      </div>
-
-      <div class="input-group">
-        <label for="email">Email</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email" 
-          value="{{ current_user.email }}"
-          required
-        >
-      </div>
+    <div class="settings-header">
+        <span class="eyebrow">tweak away ✦</span>
+        <h1>Settings</h1>
+        <p>Manage your account preferences and notifications.</p>
     </div>
 
-    <div class="settings-card">
-      <h2>Notifications</h2>
+    <form method="POST" action="{{ url_for('main.settings') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-      <div class="checkbox-group">
-        <input type="checkbox" id="study_reminder" name="study_reminder">
-        <label for="study_reminder">Study reminder</label>
-      </div>
+        <div class="settings-card">
+            <span class="section-tag">your details</span>
+            <h2>Account</h2>
 
-      <div class="checkbox-group">
-        <input type="checkbox" id="daily_goal" name="daily_goal">
-        <label for="daily_goal">Daily goal notifications</label>
-      </div>
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username"
+                       value="{{ current_user.username }}" required>
+            </div>
 
-      <div class="checkbox-group">
-        <input type="checkbox" id="friend_activities" name="friend_activities">
-        <label for="friend_activities">Friend activities</label>
-      </div>
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email"
+                       value="{{ current_user.email }}" required>
+            </div>
+        </div>
 
-      <div class="checkbox-group">
-        <input type="checkbox" id="new_study_set_updates" name="new_study_set_updates">
-        <label for="new_study_set_updates">New study set updates</label>
-      </div>
-    </div>
+        <div class="settings-card coming-soon">
+            <span class="section-tag">coming soon</span>
+            <h2>Notifications</h2>
 
-    <div class="settings-card">
-      <h2>Language</h2>
+            <div class="checkbox-group">
+                <input type="checkbox" id="study_reminder" name="study_reminder" disabled>
+                <label for="study_reminder">Study reminder</label>
+            </div>
 
-      <div class="input-group">
-        <label for="language">Preferred language</label>
+            <div class="checkbox-group">
+                <input type="checkbox" id="daily_goal" name="daily_goal" disabled>
+                <label for="daily_goal">Daily goal nudges</label>
+            </div>
 
-        <select id="language" name="language">
-          <option value="english">English</option>
-          <option value="vietnamese">Vietnamese</option>
-          <option value="french">French</option>
-          <option value="spanish">Spanish</option>
-        </select>
-      </div>
-    </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="friend_activities" name="friend_activities" disabled>
+                <label for="friend_activities">Friend activity</label>
+            </div>
 
-    <div class="button-row">
-      <a href="{{ url_for('main.index') }}" class="cancel-button">Cancel</a>
-      <button type="submit" class="save-button">Save Changes</button>
-    </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="new_study_set_updates" name="new_study_set_updates" disabled>
+                <label for="new_study_set_updates">New study set updates</label>
+            </div>
+        </div>
 
-  </form>
+        <div class="settings-card coming-soon">
+            <span class="section-tag">coming soon</span>
+            <h2>Language</h2>
+
+            <div class="input-group">
+                <label for="language">Preferred language</label>
+                <select id="language" name="language" disabled>
+                    <option value="english">English</option>
+                    <option value="vietnamese">Vietnamese</option>
+                    <option value="french">French</option>
+                    <option value="spanish">Spanish</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="button-row">
+            <a href="{{ url_for('main.profile') }}" class="cancel-button">Cancel</a>
+            <button type="submit" class="save-button">Save changes</button>
+        </div>
+
+    </form>
 
 </div>
-
 {% endblock %}

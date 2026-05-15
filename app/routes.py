@@ -353,3 +353,35 @@ def analytics():
         chart_data=chart_data,
         chart_labels=chart_labels,
     )
+
+
+MODE_CONFIG = {
+    "flip": {
+        "title": "Flip Mode",
+        "tagline": "Go through your cards one by one. Calm and classic.",
+        "eyebrow": "flip mode ✦",
+        "accent": "var(--accent)",
+        "start_endpoint": "main.study_set_study",
+        "cta": "Start flipping",
+    },
+}
+
+
+@main.route("/modes/<mode>")
+@login_required
+def mode_select(mode):
+    if mode not in MODE_CONFIG:
+        abort(404)
+
+    user_study_sets = (
+        StudySet.query.filter_by(user_id=current_user.id)
+        .order_by(StudySet.id.desc())
+        .all()
+    )
+
+    return render_template(
+        "mode_select.html",
+        mode=mode,
+        config=MODE_CONFIG[mode],
+        study_sets=user_study_sets,
+    )

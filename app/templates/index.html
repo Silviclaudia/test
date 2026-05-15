@@ -33,11 +33,19 @@
         <span class="handwritten" style="font-size:1.2rem;color:var(--ink-soft);">pick your vibe →</span>
     </div>
     <div class="mode-list">
-        <article class="feature-card">
-            <span class="icon-bubble"><i class="fa-regular fa-clone"></i></span>
-            <h3>Flip Mode</h3>
-            <p>Go through your cards one by one. Classic, calm, effective.</p>
-        </article>
+        {% if current_user.is_authenticated %}
+            <a class="feature-card" href="{{ url_for('main.mode_select', mode='flip') }}">
+                <span class="icon-bubble"><i class="fa-regular fa-clone"></i></span>
+                <h3>Flip Mode</h3>
+                <p>Go through your cards one by one. Classic, calm, effective.</p>
+            </a>
+        {% else %}
+            <a class="feature-card" href="{{ url_for('main.login', next=url_for('main.mode_select', mode='flip')) }}">
+                <span class="icon-bubble"><i class="fa-regular fa-clone"></i></span>
+                <h3>Flip Mode</h3>
+                <p>Go through your cards one by one. Classic, calm, effective.</p>
+            </a>
+        {% endif %}
         <article class="feature-card">
             <span class="icon-bubble"><i class="fa-regular fa-circle-question"></i></span>
             <h3>Quiz Mode</h3>

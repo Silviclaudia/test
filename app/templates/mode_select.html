@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}{{ config.title }} | Study Dashboard{% endblock %}
+
+{% block content %}
+<section class="profile">
+    <div class="profile-info">
+        <a class="back-link" href="{{ url_for('main.index') }}">← back to dashboard</a>
+        <span class="eyebrow handwritten" style="color:{{ config.accent }};font-size:1.3rem;">{{ config.eyebrow }}</span>
+        <h1>{{ config.title }}</h1>
+        <p>{{ config.tagline }}</p>
+    </div>
+</section>
+
+<section class="study-set-container">
+    <div class="section-heading">
+        <h2>Pick a set</h2>
+        <span class="handwritten" style="font-size:1.15rem;color:var(--ink-soft);">your sets ↓</span>
+    </div>
+
+    {% if study_sets %}
+        <div class="set-list">
+            {% for s in study_sets %}
+                {% if s.flashcards %}
+                    <a class="flashcard-preview" href="{{ url_for(config.start_endpoint, study_set_id=s.id) }}">
+                        <h3>{{ s.title }}</h3>
+                        {% if s.description %}
+                            <p>{{ s.description[:80] }}{% if s.description|length > 80 %}…{% endif %}</p>
+                        {% endif %}
+                        <div class="set-meta">
+                            <span class="card-count">{{ s.flashcards|length }} cards</span>
+                            <span class="set-owner" style="color:{{ config.accent }};font-weight:800;">{{ config.cta }} →</span>
+                        </div>
+                    </a>
+                {% else %}
+                    <div class="flashcard-preview" style="opacity:0.55;cursor:not-allowed;">
+                        <h3>{{ s.title }}</h3>
+                        <p style="color:var(--ink-faint);font-style:italic;">No cards in this set yet.</p>
+                        <div class="set-meta">
+                            <a href="{{ url_for('main.edit_study_set', study_set_id=s.id) }}"
+                               style="color:var(--accent);border-bottom:2px dotted var(--accent);font-weight:800;">
+                                Add cards
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-results" style="padding:1.4rem 1.5rem;background:var(--sticky-y);border:2px dashed var(--ink);border-radius:var(--radius);transform:rotate(-0.4deg);">
+            <h3 style="margin:0 0 0.4rem;">No study sets yet</h3>
+            <p style="margin:0;color:var(--ink-soft);">
+                <a href="{{ url_for('main.create_study_set') }}"
+                   style="color:var(--accent);border-bottom:2px dotted var(--accent);font-weight:800;">
+                    Create your first set
+                </a>
+                to start using {{ config.title }}.
+            </p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

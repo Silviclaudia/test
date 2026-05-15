@@ -5,9 +5,10 @@
 {% block content %}
 <section class="profile">
     <div class="profile-info">
-        <a href="{{ url_for('main.index') }}" class="back-link">Back to dashboard</a>
-        <h1>Create New Study Set</h1>
-        <p>Build your own custom flashcard set.</p>
+        <a href="{{ url_for('main.index') }}" class="back-link">← back to dashboard</a>
+        <span class="eyebrow handwritten" style="color:var(--accent);font-size:1.3rem;">brand new ✦</span>
+        <h1>Make a <span class="marker-underline">study set</span></h1>
+        <p>Build your own custom flashcard set, one card at a time.</p>
     </div>
 </section>
 
@@ -26,34 +27,42 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
         <div class="card-section">
-            <label for="title">Set Title</label>
+            <h3>The basics</h3>
+            <label for="title">Set title</label>
             <input type="text" id="title" name="title" placeholder="e.g. Biology 101" required>
 
             <label for="description">Description</label>
-            <textarea id="description" name="description" placeholder="Brief description of the study set" rows="3"></textarea>
+            <textarea id="description" name="description" placeholder="What's this set about?" rows="3"></textarea>
         </div>
 
-        <div class="card-section ai-bg">
+        <div class="card-section ai-bg" style="position:relative;">
+            <span class="section-tag" style="position:absolute;top:-0.6rem;right:1.2rem;padding:0.15rem 0.7rem;background:var(--sticky-p);border:2px solid var(--ink);border-radius:999px;font-family:'Caveat',cursive;font-size:1rem;font-weight:700;color:var(--ink);transform:rotate(4deg);">coming soon</span>
             <div class="ai-header">
                 <span class="icon">AI</span>
                 <h3>AI Flashcard Generator</h3>
             </div>
-            <textarea name="ai-input" placeholder="Enter a topic or text and let AI generate flashcards for you!" rows="4"></textarea>
-            <p class="hint">e.g. paste notes to generate</p>
-            <button type="button" class="btn-ai">Generate Flashcards</button>
+            <textarea name="ai-input" placeholder="Paste your notes — we'll do the rest." rows="4" disabled></textarea>
+            <p class="hint">e.g. paste a paragraph from your textbook</p>
+            <button type="button" class="btn-ai" disabled>Generate flashcards</button>
         </div>
 
         <div id="questions-list">
             <div class="card-section question-block">
-                <h3>Question 1</h3>
+                <h3>
+                    <span class="handwritten" style="color:var(--accent);font-size:1.4rem;">card</span>
+                    <span style="font-family:'Fraunces',serif;">1</span>
+                </h3>
 
                 <label for="term-1">Term</label>
-                <input type="text" id="term-1" name="term" placeholder="Enter the term" required>
+                <input type="text" id="term-1" name="term" placeholder="The word, concept, or question" required>
 
                 <label for="definition-1">Definition</label>
-                <input type="text" id="definition-1" name="definition" placeholder="Enter the definition" required>
+                <input type="text" id="definition-1" name="definition" placeholder="What it means / the answer" required>
 
-                <p>Multiple Choice Options for Quiz (optional)</p>
+                <p style="margin-top:1rem;color:var(--ink-soft);font-weight:700;">
+                    Multiple choice options
+                    <span class="handwritten" style="color:var(--ink-faint);font-weight:400;font-size:1rem;">(optional, for quiz mode)</span>
+                </p>
                 <div class="options-grid">
                     <input type="text" name="option1" placeholder="Option 1">
                     <input type="text" name="option2" placeholder="Option 2">
@@ -63,10 +72,12 @@
         </div>
 
         <div class="form-footer">
-            <button type="button" id="add-question" class="button button-secondary">+ Add Another Question</button>
-            <button type="submit" class="button">Create Study Set</button>
+            <button type="button" id="add-question" class="button button-ghost">
+                <i class="fa-solid fa-plus"></i> Add another card
+            </button>
+            <button type="submit" class="button">Create study set</button>
         </div>
-    </form> 
+    </form>
 </section>
 
 <script>
@@ -78,15 +89,21 @@
         const questionBlock = document.createElement("div");
         questionBlock.className = "card-section question-block";
         questionBlock.innerHTML = `
-            <h3>Question ${questionNumber}</h3>
+            <h3>
+                <span class="handwritten" style="color:var(--accent);font-size:1.4rem;">card</span>
+                <span style="font-family:'Fraunces',serif;">${questionNumber}</span>
+            </h3>
 
             <label for="term-${questionNumber}">Term</label>
-            <input type="text" id="term-${questionNumber}" name="term" placeholder="Enter the term" required>
+            <input type="text" id="term-${questionNumber}" name="term" placeholder="The word, concept, or question" required>
 
             <label for="definition-${questionNumber}">Definition</label>
-            <input type="text" id="definition-${questionNumber}" name="definition" placeholder="Enter the definition" required>
+            <input type="text" id="definition-${questionNumber}" name="definition" placeholder="What it means / the answer" required>
 
-            <p>Multiple Choice Options for Quiz (optional)</p>
+            <p style="margin-top:1rem;color:var(--ink-soft);font-weight:700;">
+                Multiple choice options
+                <span class="handwritten" style="color:var(--ink-faint);font-weight:400;font-size:1rem;">(optional, for quiz mode)</span>
+            </p>
             <div class="options-grid">
                 <input type="text" name="option1" placeholder="Option 1">
                 <input type="text" name="option2" placeholder="Option 2">
